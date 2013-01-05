@@ -1,0 +1,95 @@
+body {background: #E6E6E6;}
+.vcard{
+width:380px;
+height:222px;
+background: white;
+border-top: 1px solid white;
+padding-bottom: 25px;
+-moz-box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+-webkit-box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+position:absolute;
+left:50%;
+top:50%;
+margin-left:-190px;
+margin-top:-111px;
+}
+
+.vcard h1{
+	font-family: 'Arial Black';
+	font-size:14pt;
+	margin-left:10px;
+	margin-bottom:40px;
+	color:#4B50D1;
+}
+.vcard .name, .vcard .subline{
+	font-family:'Helvetica Neue', Arial, Sans-Serif;
+	font-size:9pt;
+	margin-left:10px;
+	font-weight:bold;
+	color:#636363;
+	text-align: center;
+	margin-bottom:20px; 
+}
+
+.vcard .name a {
+	text-decoration:none;
+	margin-left:0px;
+	font-family: 'Helvetica Neue', Arial, Sans-Serif;;
+	font-size:9pt;
+	margin-left:0px;
+	color:#636363;
+	font-weight:bold;
+}
+
+.vcard .subline{
+	font-weight:normal;
+}
+
+.vcard .social {
+	text-align: center;
+
+}
+
+.vcard .social a.icon {
+display: inline-block;
+width: 16px;
+height: 16px;
+overflow: hidden;
+text-indent: -5000px;
+margin: 20px 0 3px;
+opacity: 0.3;
+padding: 0 4px;
+background-repeat: no-repeat;
+background-position: center;
+}
+
+.vcard .social a.icon:hover{
+	opacity: 1;
+}
+
+.icon-email {
+background-image: url(../images/email.png);
+}
+.icon-twitter {
+background-image: url(../images/twitter.png);
+}
+
+.icon-facebook {
+background-image: url(../images/facebook.png);
+}
+
+.icon-xing {
+background-image: url(../images/xing.png);
+}
+
+.icon-github {
+background-image: url(../images/github.png);
+}
+
+.icon-skype {
+background-image: url(./images/email.png);
+}
+
+
