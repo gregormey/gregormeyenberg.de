@@ -83,9 +83,12 @@ background-image: url(../images/facebook.png);
 .icon-xing {
 background-image: url(../images/xing.png);
 }
-
 .icon-github {
 background-image: url(../images/github.png);
+}
+
+.icon-scrum {
+	background-image: url(../images/scrum.png);
 }
 
 .icon-skype {
