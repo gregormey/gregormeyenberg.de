@@ -1,6 +1,6 @@
-HOST = null; // localhost
-PORT = 80;
-DOCROOT = "/var/www/gregormeyenberg.de/card/content";
+var HOST = null; // localhost
+var PORT = 80; //default port
+var DOCROOT = "/var/www/gregormeyenberg.de/card/content";
 var sys = require("sys"),  
     http = require("http"),  
     url = require("url"),  
@@ -12,8 +12,8 @@ var server = http.createServer(function (req, res) {
   var filename = path.join(DOCROOT, uri);
   path.exists(filename, function (exists) {	
     if(!exists) {  
-	  res.writeHead(404, { "Content-Type": "text/plain"});
-  	  res.end("Not Found");
+        res.writeHead(404, { "Content-Type": "text/plain"});
+        res.end("Not Found");
     }
     fs.readFile(filename, function (err, data) {	
         if(err) {  
@@ -27,7 +27,7 @@ var server = http.createServer(function (req, res) {
 	});
   });
 });
-listen = function (port, host) {
+var listen = function (port, host) {
   server.listen(port, host);
   sys.puts("Server at http://" + (host || "127.0.0.1") + ":" + port.toString() + "/");
 };
