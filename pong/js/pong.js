@@ -26,7 +26,7 @@
 							(ctx.ball.y-ctx.ball.radius) > ctx.player.y &&
 							(ctx.ball.y+ctx.ball.radius) < (ctx.player.y+ctx.player.height)
 						)
-							return true;
+							return -((ctx.player.y+(ctx.player.height/2))-ctx.ball.y)/10;
 						else
 							return false;
 							
@@ -83,7 +83,7 @@
 		h=$(elem).innerHeight();
 		w=$(elem).innerWidth();
 		
-		
+	
 		if((ctx.ball.y+incY)>(h-ctx.ball.radius) ||
 			(ctx.ball.y+incY)<(ctx.ball.radius)){
 			incY=incY*-1;	
@@ -96,10 +96,10 @@
 		
 		ctx.ball.x+=incX;
 		ctx.ball.y+=incY;
-		
-		if(ctx.player.hitBall())
-        {
-        	incY+=(ctx.player.speed)*(ctx.player.direct*-1);
+		var hit=ctx.player.hitBall();
+		if(hit)
+        {	
+        	incY=hit;
         	incX=incX*-1;
         	ctx.ball.x+=incX;
 			ctx.ball.y+=incY;	
