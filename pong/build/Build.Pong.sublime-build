@@ -1,0 +1,3 @@
+{
+    "cmd": ["uglifyjs","Player.js","Ball.js","plugin.js", "-o", "../pong.min.js"]
+}
