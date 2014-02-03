@@ -12,8 +12,8 @@
 				$.fn.pong.ctx[me.id]=ctx;
 				ctx.fillStyle = $me.css("color");
 				ctx.strokeStyle=  $me.css("color"); 
-				ctx.player=new Player(this,PLAYER_LEFT);
-				ctx.opponent=new Player(this,PLAYER_RIGHT);
+				ctx.player=new HumanPlayer(this,PLAYER_LEFT);
+				//ctx.opponent=new Player(this,PLAYER_RIGHT);
 				ctx.ball=new Ball(this);			
     		
 			});
