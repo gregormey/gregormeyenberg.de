@@ -1,9 +1,7 @@
 
 var HumanPlayer=function(elem,side){
-
+	this.ctxReference="player";
 	this.init=function(){
-		this.isHuman=true;
-		this.isComputer=false;
 		$(document).keydown(
 			$.proxy(function(event){
 				if(event.keyCode==38){

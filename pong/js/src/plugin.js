@@ -11,10 +11,11 @@
 				var ctx = me.getContext('2d');
 				$.fn.pong.ctx[me.id]=ctx;
 				ctx.fillStyle = $me.css("color");
-				ctx.strokeStyle=  $me.css("color"); 
+				ctx.strokeStyle=  $me.css("color");
+				ctx.ball=new Ball(this); 
 				ctx.player=new HumanPlayer(this,PLAYER_LEFT);
-				//ctx.opponent=new Player(this,PLAYER_RIGHT);
-				ctx.ball=new Ball(this);			
+				ctx.opponent=new ComputerPlayer(this,PLAYER_RIGHT);
+						
     		
 			});
 	}	

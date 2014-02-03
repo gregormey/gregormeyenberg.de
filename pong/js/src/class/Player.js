@@ -21,17 +21,18 @@ var Player = function(elem,side){
 		this.x=$(this.elem).innerWidth()-(this.width+5);
 	}
 
-	var ctx=elem.getContext('2d');
-	ctx.fillRect(this.x,this.y,this.width,this.height);
+	this.ctx=elem.getContext('2d');
+
+	this.ctx.fillRect(this.x,this.y,this.width,this.height);
 
 	this.hit=function(){
-		if((ctx.ball.x-ctx.ball.radius) < 
+		if((this.ctx.ball.x-this.ctx.ball.radius) < 
 						(this.x+this.width)
 					&&
-					(ctx.ball.y-ctx.ball.radius) > this.y &&
-					(ctx.ball.y+ctx.ball.radius) < (this.y+this.height)
+					(this.ctx.ball.y-this.ctx.ball.radius) > this.y &&
+					(this.ctx.ball.y+this.ctx.ball.radius) < (this.y+this.height)
 				)
-					return -((this.y+(this.height/2))-ctx.ball.y)/10;
+					return -((this.y+(this.height/2))-this.ctx.ball.y)/10;
 				else
 					return false;
 	};
@@ -42,9 +43,9 @@ var Player = function(elem,side){
 		if((this.y+inc)<(h-this.height)
 			&& (this.y+inc)>0
 		){
-			ctx.clearRect(0,0,this.width+6,h);
-			ctx.player.y+=inc;
-			ctx.fillRect(this.x,this.y,this.width,this.height);
+			this.ctx.clearRect(this.x,0,this.width+6,h);
+			this.y+=inc;
+			this.ctx.fillRect(this.x,this.y,this.width,this.height);
 		}
 			this.speed+=0.2;
 	};
@@ -53,12 +54,12 @@ var Player = function(elem,side){
 		if(direction==PLAYER_MOVEUP){
 			if(!this.interval){
 				this.direct=-1;
-				this.interval=window.setInterval("$.fn.pong.ctx['"+this.elem.id+"'].player.draw();",1);
+				this.interval=window.setInterval("$.fn.pong.ctx['"+this.elem.id+"']."+this.ctxReference+".draw();",1);
 			}
 		}else if(direction==PLAYER_MOVEDOWN){
 			if(!this.interval){	
 				this.direct=1;
-				this.interval=window.setInterval("$.fn.pong.ctx['"+this.elem.id+"'].player.draw();",1);
+				this.interval=window.setInterval("$.fn.pong.ctx['"+this.elem.id+"']."+this.ctxReference+".draw();",1);
 			}
 		}
 	};
