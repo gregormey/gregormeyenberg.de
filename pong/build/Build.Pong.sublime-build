@@ -1,3 +1,0 @@
-{
-    "cmd": ["uglifyjs","./class/Player.js","./class/HumanPlayer.js","./class/ComputerPlayer.js","./class/Ball.js","plugin.js", "-o", "../pong.min.js"]
-}
