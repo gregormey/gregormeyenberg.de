@@ -15,6 +15,7 @@ var Player = function(elem,side){
 	this.direct=0;
 	this.elem=elem;
 	this.side=side?side:PLAYER_LEFT;
+	this.bounding=2;
 	if(this.side==PLAYER_LEFT){
 		this.x=5;
 	}else if(this.side==PLAYER_RIGHT){
@@ -27,16 +28,16 @@ var Player = function(elem,side){
 
 	this.getHitPoint=function(){
 		if(this.side==PLAYER_LEFT)
-			return (this.ctx.ball.x-this.ctx.ball.radius) < (this.x+this.width);
+			return (this.ctx.ball.x-this.ctx.ball.radius) < ((this.x+this.width)+this.bounding);
 		else if(this.side==PLAYER_RIGHT)
-			return (this.ctx.ball.x+this.ctx.ball.radius) > this.x;
+			return (this.ctx.ball.x+this.ctx.ball.radius) > (this.x-this.bounding);
 	};
 
 	this.hit=function(){
 		if(	this.getHitPoint()
 					&&
-					(this.ctx.ball.y-this.ctx.ball.radius) > this.y &&
-					(this.ctx.ball.y+this.ctx.ball.radius) < (this.y+this.height)
+					(this.ctx.ball.y-this.ctx.ball.radius) > (this.y-10) &&
+					(this.ctx.ball.y+this.ctx.ball.radius) < (this.y+this.height+10)
 				)
 					return -((this.y+(this.height/2))-this.ctx.ball.y)/10;
 				else

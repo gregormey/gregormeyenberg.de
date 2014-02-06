@@ -1,9 +1,11 @@
 var Ball=function(elem){
 	this.x=100;
 	this.y=100;
+	this.speed=1;
 	this.move=false;
 	this.radius=5;
 	this.elem=elem;
+
 	var ctx=elem.getContext('2d');
 
 	this.draw=function(incX,incY){
@@ -15,10 +17,10 @@ var Ball=function(elem){
 
 	};
 
-	this.draw(-1,0);
+	this.draw(-2,0);
 
 	this.move=function(incX,incY){
-		ctx.clearRect(this.x-this.radius,this.y-this.radius,this.radius*2,this.radius*2);
+		ctx.clearRect(this.x-this.radius,this.y-this.radius-1,this.radius*2+ 2,this.radius*2+ 2);
 		h=$(this.elem).innerHeight();
 		w=$(this.elem).innerWidth();
 		
@@ -35,19 +37,18 @@ var Ball=function(elem){
 		
 		this.x+=incX;
 		this.y+=incY;
-		var hit=ctx.player.hit();
-		if(!hit){
-			hit=ctx.opponent.hit();
-		};
-		if(hit)
+		var playerHit=ctx.player.hit();
+		var opponentHit=ctx.opponent.hit();
+			
+		if(playerHit || opponentHit)
         {	
-        	incY=hit;
+        	incY=playerHit?playerHit:opponentHit;
         	incX=incX*-1;
         	this.x+=incX;
 			this.y+=incY;	
         };
         this.draw(incX,incY);
-		
+	
 	};
 
 };
