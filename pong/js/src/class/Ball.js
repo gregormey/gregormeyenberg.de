@@ -36,6 +36,9 @@ var Ball=function(elem){
 		this.x+=incX;
 		this.y+=incY;
 		var hit=ctx.player.hit();
+		if(!hit){
+			hit=ctx.opponent.hit();
+		};
 		if(hit)
         {	
         	incY=hit;
