@@ -1,8 +1,30 @@
+/**
+ * Player extention for computer controlled player
+ * @param {HTMLCanvasElement} elem
+ * @param {Number} side (PLAYER_LEFT|PLAYER_RIGHT)
+ */
 var ComputerPlayer=function(elem,side){
+	/**
+	 * Refernze identification in canvas (ctx) scope
+	 * @type {String}
+	 */
 	this.ctxReference="opponent";
+	/**
+	 * flags if a move down is already triggered
+	 * @type {Boolean}
+	 */
 	this.moveDown=false;
+	/**
+	 * [flags if a move up is already triggered
+	 * @type {Boolean}
+	 */
 	this.moveUp=false;
 
+	/**
+	 * moves the player to the ball controlled by the middelpoint of player
+	 * and the ball coordinates
+	 * @return {[type]}
+	 */
 	this.moveToBall=function(){
 		var middle=this.y+(this.height/2);
 		if(this.ctx.ball.y<middle && !this.moveUp){
@@ -19,6 +41,10 @@ var ComputerPlayer=function(elem,side){
 		}
 	};
 
+	/**
+	 * initial call of the move method
+	 * @return {[type]}
+	 */
 	this.init=function(){
 		window.setInterval("$.fn.pong.ctx['"+this.elem.id+"']."+this.ctxReference+".moveToBall();",1);
 	};
