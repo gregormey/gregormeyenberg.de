@@ -5,7 +5,7 @@
  */
 var ComputerPlayer=function(elem,side){
 	/**
-	 * Refernze identification in canvas (ctx) scope
+	 * Referenze identification in canvas (ctx) scope
 	 * @type {String}
 	 */
 	this.ctxReference="opponent";

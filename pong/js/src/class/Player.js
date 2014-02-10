@@ -73,7 +73,7 @@ var Player = function(elem,side){
 	this.side=side?side:PLAYER_LEFT;
 
 	/**
-	 * biunding area, amount of pixel around player 
+	 * bounding area, amount of pixel around player 
 	 * to detect ball hits
 	 * @type {Number}
 	 */
