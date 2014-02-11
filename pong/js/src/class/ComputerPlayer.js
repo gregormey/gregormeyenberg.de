@@ -15,7 +15,7 @@ var ComputerPlayer=function(elem,side){
 	 */
 	this.moveDown=false;
 	/**
-	 * [flags if a move up is already triggered
+	 * flags if a move up is already triggered
 	 * @type {Boolean}
 	 */
 	this.moveUp=false;
@@ -23,7 +23,7 @@ var ComputerPlayer=function(elem,side){
 	/**
 	 * moves the player to the ball controlled by the middelpoint of player
 	 * and the ball coordinates
-	 * @return {[type]}
+	 * @return {Null}
 	 */
 	this.moveToBall=function(){
 		var middle=this.y+(this.height/2);
@@ -41,6 +41,7 @@ var ComputerPlayer=function(elem,side){
 		}
 	};
 
+	
 	/**
 	 * initial call of the move method
 	 * @return {[type]}

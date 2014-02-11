@@ -61,6 +61,24 @@ var Ball=function(elem){
 	this.draw(-2,0);
 
 	/**
+	 * Checks if ball is on the edge's of the playground
+	 * and returns rebound coordinate by changeing the direction of the currentValue
+	 * @param  {Number} reference (this.x | this.y)
+	 * @param  {Number} dimension (x | y)
+	 * @param  {Number} currentValue (incX | incY)
+	 * @param  {Number} radius (Ball radius idr. this.radius)
+	 * @return {Number} (currentValue | currentValue*-1)
+	 */
+	this.getEdgeHitValue=function(reference, dimension ,increment, radius){
+		if((reference+currentValue)>(dimension-radius) ||
+			(reference+currentValue)<(radius)){
+			return increment*-1;	
+		}else{
+			return increment;
+		}
+	}
+
+	/**
 	 * Sets next position  of Ball by given direction parameters (incX,incY) 
 	 * and checks if the ball hits a player or the outline
 	 * @param  {[type]} incX
@@ -68,20 +86,18 @@ var Ball=function(elem){
 	 * @return {[type]}
 	 */
 	this.move=function(incX,incY){
+		//clear ball
 		ctx.clearRect(this.x-this.radius,this.y-this.radius-1,this.radius*2+ 2,this.radius*2+ 2);
+		
+		//get dimensions
 		h=$(this.elem).innerHeight();
 		w=$(this.elem).innerWidth();
 		
-	
-		if((this.y+incY)>(h-this.radius) ||
-			(this.y+incY)<(this.radius)){
-			incY=incY*-1;	
-		}
+
+		//check if ball hits upper or down edges and turns direction
+		incY=this.getEdgeHitValue(this.y,h,incY,this.radius);
+		incX=this.getEdgeHitValue(this.x,w,incX,this.radius);
 		
-		if((this.x+incX)>(w-this.radius) ||
-			(this.x+incX)<(this.radius)){
-			incX=incX*-1;	
-		}
 		
 		this.x+=incX;
 		this.y+=incY;
