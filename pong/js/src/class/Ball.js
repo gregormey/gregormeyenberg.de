@@ -13,6 +13,19 @@ var Ball=function(elem){
 	 * @type {Number}
 	 */
 	this.y=100;
+
+	/**
+	 * Initaial X movment of Ball
+	 * @type {Number}
+	 */
+	this.incX=-2;
+
+	/**
+	 * Initial Y movement of Ball
+	 * @type {Number}
+	 */
+	this.incY=0;
+
 	/**
 	 * Ball move speed
 	 * @type {Number}
@@ -34,11 +47,15 @@ var Ball=function(elem){
 	 */
 	this.elem=elem;
 
+	
+
 	/**
 	 * Rendering Context
 	 * @type {CanvasRenderingContext2D}
 	 */
 	var ctx=elem.getContext('2d');
+
+
 
 	/**
 	 * Draws Ball at current position and triggers move interval
@@ -46,19 +63,19 @@ var Ball=function(elem){
 	 * @param  {Number} incY
 	 * @return {Null}
 	 */
-	this.draw=function(incX,incY){
+	this.draw=function(){
 		ctx.beginPath();
         ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);// Outer circle
         ctx.fill();
         
-        window.setTimeout("$.fn.pong.ctx['"+this.elem.id+"'].ball.move("+incX+","+incY+")",1);
+        window.setTimeout("$.fn.pong.ctx['"+this.elem.id+"'].ball.move()",1);
 
 	};
 
 	/**
 	 * initian callof the draw method
 	 */
-	this.draw(-2,0);
+	this.draw();
 
 	/**
 	 * Checks if ball is on the edge's of the playground
@@ -79,13 +96,28 @@ var Ball=function(elem){
 	}
 
 	/**
+	 * if a player hits the ball the ball will turn its x direction
+	 * the y value is higher then more the hit is away from the middle of the player
+	 * @param {Number} playerHit
+	 * @param {Number} opponentHit
+	 * @param {Number} incX
+	 */
+	this.setPlayerHit=function(playerHit,opponentHit,incX){
+		if(playerHit || opponentHit)
+        {	
+        	this.incX=incX*-1;
+        	this.incY=playerHit?playerHit:opponentHit;
+        	this.x+=this.incX;
+			this.y+=this.incY;	
+        };
+	}
+
+	/**
 	 * Sets next position  of Ball by given direction parameters (incX,incY) 
 	 * and checks if the ball hits a player or the outline
-	 * @param  {[type]} incX
-	 * @param  {[type]} incY
-	 * @return {[type]}
+	 * @return {void}
 	 */
-	this.move=function(incX,incY){
+	this.move=function(){
 		//clear ball
 		ctx.clearRect(this.x-this.radius,this.y-this.radius-1,this.radius*2+ 2,this.radius*2+ 2);
 		
@@ -94,29 +126,23 @@ var Ball=function(elem){
 		w=$(this.elem).innerWidth();
 		
 
-		//check if ball hits upper or down edges and turns direction
-		incY=this.getEdgeHitValue(this.y,h,incY,this.radius);
-		incX=this.getEdgeHitValue(this.x,w,incX,this.radius);
+		//check if ball hits upper or down edges and turns direction or just returns increment valte
+		this.y+=this.getEdgeHitValue(this.y,h,this.incY,this.radius);
+		this.x+=ithis.getEdgeHitValue(this.x,w,this.incX,this.radius);
 		
-		
-		this.x+=incX;
-		this.y+=incY;
-		var playerHit=ctx.player.hit();
-		var opponentHit=ctx.opponent.hit();
-			
-		if(playerHit || opponentHit)
-        {	
-        	incY=playerHit?playerHit:opponentHit;
-        	incX=incX*-1;
-        	this.x+=incX;
-			this.y+=incY;	
-        };
+
+		//reset x,y coordinates if player hits the ball
+		this.setPlayerHit(ctx.player.hit(),ctx.opponent.hit(),incX);
+
         this.draw(incX,incY);
 	
 	};
 
+
+
 };
 
+//Export Module for require Node.js
 module.exports=Ball;
 
 

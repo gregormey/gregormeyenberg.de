@@ -31,5 +31,44 @@ describe('Ball', function(){
   			}
   		)
   		
-  	})
+  	});
+
+
+  	describe('#move()',function(){
+  		it("keeps the current x,y coordinate if no player was hit", function(){
+  			ball.x=10;
+  			ball.y=10;
+  			ball.setPlayerHit(false,false,1);
+  			assert.equal(10,ball.x);
+  			assert.equal(10,ball.y);
+  		});
+
+  		it("turns the direction by setting x to negative value and y to the player hit value if a player was hit", 
+  			function(){
+  				ball.x=10;
+  				ball.y=10;
+  				ball.setPlayerHit(1,false,1);
+  				assert.equal(9,ball.x);
+  				assert.equal(11,ball.y);
+  				assert.equal(ball.incX,-1);
+  				assert.equal(ball.incY,1);
+
+  		});
+
+  		it("turns the direction by setting x to positve value and y to the opponent hit value if a opponent was hit", 
+  			function(){
+  				ball.x=10;
+  				ball.y=10;
+  				ball.setPlayerHit(false,1,-1);
+  				assert.equal(11,ball.x);
+  				assert.equal(11,ball.y);
+  				assert.equal(ball.incX,1);
+  				assert.equal(ball.incY,1);
+
+  		});
+
+
+
+  	});
+
 })
