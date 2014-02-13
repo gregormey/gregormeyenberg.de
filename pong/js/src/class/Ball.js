@@ -65,13 +65,13 @@ var Ball=function(elem){
 	 * and returns rebound coordinate by changeing the direction of the currentValue
 	 * @param  {Number} reference (this.x | this.y)
 	 * @param  {Number} dimension (x | y)
-	 * @param  {Number} currentValue (incX | incY)
+	 * @param  {Number} increment (incX | incY)
 	 * @param  {Number} radius (Ball radius idr. this.radius)
-	 * @return {Number} (currentValue | currentValue*-1)
+	 * @return {Number} (increment | increment*-1)
 	 */
 	this.getEdgeHitValue=function(reference, dimension ,increment, radius){
-		if((reference+currentValue)>(dimension-radius) ||
-			(reference+currentValue)<(radius)){
+		if((reference+increment)>(dimension-radius) ||
+			(reference+increment)<(radius)){
 			return increment*-1;	
 		}else{
 			return increment;
@@ -116,3 +116,7 @@ var Ball=function(elem){
 	};
 
 };
+
+module.exports=Ball;
+
+

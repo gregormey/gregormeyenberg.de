@@ -1,7 +1,13 @@
 var assert = require("assert");
-require("../src/class/Ball.js")
+var Ball=require("../src/class/Ball.js");
+var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
+var Window = require("./class/WindowMock.js");
+
 describe('Ball', function(){
-  	var ball=new Ball();
+	// Mock window variable globally
+	window = new Window();
+  	var ball=new Ball(HTMLCanvasElement());
+
   	describe('#getEdgeHitValue()',function(){
   		it("turns the direction if ball hits the x edge",
   			function(){
@@ -11,11 +17,9 @@ describe('Ball', function(){
   				var radius=5;
 
   				increment=ball.getEdgeHitValue(reference, dimension ,increment, radius);
-
   				assert.equal(1,increment);
 
   				reference=10;
-
   				increment=ball.getEdgeHitValue(reference, dimension ,increment, radius);
 
   				assert.equal(-1,increment);
