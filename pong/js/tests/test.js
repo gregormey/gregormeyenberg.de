@@ -9,22 +9,27 @@ describe('Ball', function(){
   	var ball=new Ball(HTMLCanvasElement());
 
   	describe('#getEdgeHitValue()',function(){
-  		it("turns the direction if ball hits the x edge",
+  		var dimension=10
+  		var radius=5;
+  		it("turns the direction increment to be positive if ball would move to zero",
   			function(){
   				var increment=-1;
   				var reference=0;
-  				var dimension=10
-  				var radius=5;
-
   				increment=ball.getEdgeHitValue(reference, dimension ,increment, radius);
   				assert.equal(1,increment);
 
-  				reference=10;
-  				increment=ball.getEdgeHitValue(reference, dimension ,increment, radius);
+  			}
+  		)
 
+  		it("turns the direction increment to be negative if ball would move to dimension",
+  			function(){
+  				var increment=1;
+  				var reference=10;
+  				increment=ball.getEdgeHitValue(reference, dimension ,increment, radius);
   				assert.equal(-1,increment);
 
   			}
   		)
+  		
   	})
 })
