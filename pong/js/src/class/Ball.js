@@ -88,7 +88,8 @@ var Ball=function(elem){
 	 */
 	this.getEdgeHitValue=function(reference, dimension ,increment, radius){
 		if((reference+increment)>(dimension-radius) ||
-			(reference+increment)<(radius)){
+			(reference+increment)<(radius))
+		{
 			return increment*-1;	
 		}else{
 			return increment;
@@ -127,8 +128,12 @@ var Ball=function(elem){
 		
 
 		//check if ball hits upper or down edges and turns direction or just returns increment valte
-		this.y+=this.getEdgeHitValue(this.y,h,this.incY,this.radius);
-		this.x+=this.getEdgeHitValue(this.x,w,this.incX,this.radius);
+		this.incX=this.getEdgeHitValue(this.x,w,this.incX,this.radius);
+		this.incY=this.getEdgeHitValue(this.y,h,this.incY,this.radius);
+		
+		this.x+=this.incX;
+		this.y+=this.incY;
+		
 		
 
 		//reset x,y coordinates if player hits the ball
