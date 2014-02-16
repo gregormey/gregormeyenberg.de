@@ -3,6 +3,15 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    // Configure a mochaTest task
+    mochaTest:{
+      test: {
+         options: {
+          reporter: 'spec'
+        },
+        src: ['js/tests/test.js']
+      }
+    },
     uglify: {
       options: {
         banner: '/*! Copyright 2014, Gregor Meyenberg <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -19,10 +28,13 @@ module.exports = function(grunt) {
     }
   });
 
+  // Add the grunt-mocha-test tasks.
+  grunt.loadNpmTasks('grunt-mocha-test');
+
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default', ['mochaTest','uglify']);
 
 };
