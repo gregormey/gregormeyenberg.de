@@ -128,13 +128,13 @@ var Ball=function(elem){
 
 		//check if ball hits upper or down edges and turns direction or just returns increment valte
 		this.y+=this.getEdgeHitValue(this.y,h,this.incY,this.radius);
-		this.x+=ithis.getEdgeHitValue(this.x,w,this.incX,this.radius);
+		this.x+=this.getEdgeHitValue(this.x,w,this.incX,this.radius);
 		
 
 		//reset x,y coordinates if player hits the ball
-		this.setPlayerHit(ctx.player.hit(),ctx.opponent.hit(),incX);
+		this.setPlayerHit(ctx.player.hit(),ctx.opponent.hit(),this.incX);
 
-        this.draw(incX,incY);
+        this.draw(this.incX,this.incY);
 	
 	};
 
@@ -142,7 +142,8 @@ var Ball=function(elem){
 
 };
 
+if(typeof module !== 'undefined'){
 //Export Module for require Node.js
 module.exports=Ball;
-
+};
 
