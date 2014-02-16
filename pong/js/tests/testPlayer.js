@@ -56,6 +56,36 @@ describe('Player', function(){
 		}
 	);
 
+	describe('#draw()',function(){
+			it("sets new y coordinate for Player by speed and direction and increments speed",
+				function(){
+					playerRight.direct=1;
+					playerRight.speed=1;
+					playerRight.y=100;
+					playerRight.draw();
+					assert.equal(1.2,playerRight.speed);
+					assert.equal(101,playerRight.y);	
+				}
+			);
+			it("does not set new y coordinate for Player if player hits lower playground edge",
+				function(){
+					playerRight.direct=1;
+					playerRight.speed=1;
+					playerRight.y=260;
+					playerRight.draw();
+					assert.equal(260,playerRight.y);	
+				}
+			);
+			it("does not set new y coordinate for Player if player hits upper playground edge",
+				function(){
+					playerRight.direct=-1;
+					playerRight.speed=1;
+					playerRight.y=0;
+					playerRight.draw();
+					assert.equal(0,playerRight.y);	
+				}
+			);
+	});
 
 
 });

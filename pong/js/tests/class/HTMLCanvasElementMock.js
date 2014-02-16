@@ -16,6 +16,9 @@
           fillRect:function(){
 
           },
+          clearRect:function(){
+
+          },
           /**
            * sets a ball moch to the ctx object
            * @param {Number} x [description]
