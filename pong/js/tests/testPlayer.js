@@ -1,5 +1,6 @@
 var assert = require("assert");
 var Player=require("../src/class/player.js");
+var ComputerPlayer=require("../src/class/ComputerPlayer.js");
 var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
 var Window = require("./class/WindowMock.js");
 var jQuery=require("./class/jQueryMock.js");
@@ -87,5 +88,26 @@ describe('Player', function(){
 			);
 	});
 
+describe('ComputerPlayer',function(){
+	var computer=new ComputerPlayer(HTMLCanvasElement(),0);
+	describe('#moveToBall()', function(){
+		it("movesUp if the ball is above the player",function(){
+			computer.y=100;
+			playerRight.ctx.setBall(0,50);
+			computer.moveToBall();
+			assert.equal(true,playerRight.moveUp);
+			assert.equal(false,playerRight.moveDown);
+		});
+		it("movesDown if the ball is below the player",function(){
+			computer.y=100;
+			playerRight.ctx.setBall(0,150);
+			computer.moveToBall();
+			assert.equal(false,playerRight.moveUp);
+			assert.equal(true,playerRight.moveDown);
+		});
+
+
+	});
+});
 
 });

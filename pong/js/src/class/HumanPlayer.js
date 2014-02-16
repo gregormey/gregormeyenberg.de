@@ -34,3 +34,8 @@ var HumanPlayer=function(elem,side){
 	Player.call(this, elem,side);
 	
 };
+
+if(typeof module !== 'undefined'){
+//Export Module for require Node.js
+module.exports=HumanPlayer;
+};
