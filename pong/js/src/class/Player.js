@@ -179,6 +179,20 @@ var Player = function(elem,side){
 		this.direct=0;	
 	};
 
-	this.init();
+	/**
+	 * should be overwritten from generalisations to implement
+	 * certain behaviour
+	 * @return {Null} 
+	 */
+	this.init=function(){};
 
+	this.init();
+	
+
+};
+
+
+if(typeof module !== 'undefined'){
+//Export Module for require Node.js
+module.exports=Player;
 };

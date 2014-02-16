@@ -5,7 +5,7 @@ var Window = require("./class/WindowMock.js");
 
 describe('Ball', function(){
 	// Mock window variable globally
-	window = new Window();
+	 window = new Window();
   	var ball=new Ball(HTMLCanvasElement());
 
   	describe('#getEdgeHitValue()',function(){
