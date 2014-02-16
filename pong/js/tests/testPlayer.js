@@ -1,5 +1,7 @@
 var assert = require("assert");
-var Player=require("../src/class/player.js");
+// Player needed to be gloabal to test Computerplayer
+Player=require("../src/class/player.js");
+
 var ComputerPlayer=require("../src/class/ComputerPlayer.js");
 var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
 var Window = require("./class/WindowMock.js");
@@ -91,19 +93,22 @@ describe('Player', function(){
 describe('ComputerPlayer',function(){
 	var computer=new ComputerPlayer(HTMLCanvasElement(),0);
 	describe('#moveToBall()', function(){
+		// register required const
+		PLAYER_MOVEUP=0;
+		PLAYER_MOVEDOWN=1;
 		it("movesUp if the ball is above the player",function(){
 			computer.y=100;
-			playerRight.ctx.setBall(0,50);
+			computer.ctx.setBall(0,50);
 			computer.moveToBall();
-			assert.equal(true,playerRight.moveUp);
-			assert.equal(false,playerRight.moveDown);
+			assert.equal(true,computer.moveUp);
+			assert.equal(false,computer.moveDown);
 		});
 		it("movesDown if the ball is below the player",function(){
 			computer.y=100;
-			playerRight.ctx.setBall(0,150);
+			computer.ctx.setBall(0,150);
 			computer.moveToBall();
-			assert.equal(false,playerRight.moveUp);
-			assert.equal(true,playerRight.moveDown);
+			assert.equal(false,computer.moveUp);
+			assert.equal(true,computer.moveDown);
 		});
 
 
