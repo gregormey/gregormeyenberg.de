@@ -90,6 +90,18 @@ describe('Player', function(){
 			);
 	});
 
+	 describe('#addScore()',
+          function(){
+			it("add Score point to a player",
+				function(){
+          			playerRight.ctx.setBall(0,50);	
+            		playerRight.addScore();
+            		assert.equal(1,playerRight.score);
+            	}
+            )	
+          }
+      );
+
 describe('ComputerPlayer',function(){
 	var computer=new ComputerPlayer(HTMLCanvasElement(),0);
 	describe('#moveToBall()', function(){

@@ -36,7 +36,7 @@
 				 * @type {ComputerPlayer}
 				 */
 				ctx.opponent=new ComputerPlayer(this,PLAYER_RIGHT);
-						
+				
     		
 			});
 	}	

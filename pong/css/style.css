@@ -13,3 +13,14 @@ h1 {
 	margin-left:40px;
 	
 }
+ul.score{
+	font-size:12pt;	
+	width: 400px;
+	list-style:none;
+}
+ul.score li#playerScore{
+	float:left;
+}
+ul.score li#opponentScore {
+	float:right;
+}

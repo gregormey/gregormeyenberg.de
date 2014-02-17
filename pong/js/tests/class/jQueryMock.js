@@ -7,6 +7,9 @@ module.exports=function(){
 					},
 					innerHeight:function(){
 						return 300;
+					},
+					html:function(){
+						
 					}
 			}
 		}

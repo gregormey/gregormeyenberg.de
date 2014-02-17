@@ -3,22 +3,7 @@
  * @param {HTMLCanvasElement} elem
  */
 var Ball=function(elem){
-	/**
-	 * initial x coordinate
-	 * @type {Number}
-	 */
-	this.x=100;
-	/**
-	 * initial y coordinate
-	 * @type {Number}
-	 */
-	this.y=100;
-
-	/**
-	 * Initaial X movment of Ball
-	 * @type {Number}
-	 */
-	this.incX=-2;
+	
 
 	/**
 	 * Initial Y movement of Ball
@@ -55,6 +40,21 @@ var Ball=function(elem){
 	 */
 	var ctx=elem.getContext('2d');
 
+	/**
+	 * sets ball back to middle point after score
+	 * @param  {Number} side [description]
+	 * @return {Null}      [description]
+	 */
+	this.reset=function(side){
+		this.x=$(elem).innerWidth()/2;
+		this.y=$(elem).innerHeight()/2;
+		//set the direction related to the side parameter
+		this.incX=side==PLAYER_RIGHT?-2:2;
+
+	}
+
+	//initial ball palce
+	this.reset(PLAYER_RIGHT);
 
 
 	/**
@@ -113,6 +113,20 @@ var Ball=function(elem){
         };
 	}
 
+
+	/**
+	 * checks if balls y coordinate is lower then 0 or higher then with
+	 * @param  {Nimber} w witdh of the playground
+	 * @return {[type]}   
+	 */
+	this.checkScore=function(w){
+		if(this.x<0){
+			ctx.opponent.addScore();
+		}else if(this.x>w){
+			ctx.player.addScore();
+		}
+	}
+
 	/**
 	 * Sets next position  of Ball by given direction parameters (incX,incY) 
 	 * and checks if the ball hits a player or the outline
@@ -128,7 +142,6 @@ var Ball=function(elem){
 		
 
 		//check if ball hits upper or down edges and turns direction or just returns increment valte
-		this.incX=this.getEdgeHitValue(this.x,w,this.incX,this.radius);
 		this.incY=this.getEdgeHitValue(this.y,h,this.incY,this.radius);
 		
 		this.x+=this.incX;
@@ -138,6 +151,10 @@ var Ball=function(elem){
 
 		//reset x,y coordinates if player hits the ball
 		this.setPlayerHit(ctx.player.hit(),ctx.opponent.hit(),this.incX);
+
+		//checks if a player scores
+		this.checkScore(w);
+
 
         this.draw(this.incX,this.incY);
 	

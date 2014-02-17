@@ -79,6 +79,11 @@ var Player = function(elem,side){
 	 */
 	this.bounding=2;
 
+	/**
+	 * Score Points of the Player
+	 * @type {Number}
+	 */
+	this.score = 0
 
 	if(this.side==PLAYER_LEFT){
 		/**
@@ -102,6 +107,16 @@ var Player = function(elem,side){
 
 	//Draw Player initially
 	this.ctx.fillRect(this.x,this.y,this.width,this.height);
+
+	/**
+	 * increments score points and displays score
+	 * in DOM
+	 */
+	this.addScore=function(){
+		this.score++;
+		$('#'+this.ctxReference+"Score").html(this.score);
+		this.ctx.ball.reset(this.side);
+	}
 
 	/**
 	 *  retruns true if ball is in the x range of the Player

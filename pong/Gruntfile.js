@@ -18,10 +18,10 @@ module.exports = function(grunt) {
       },
       my_target:{
         files: {
-         'js/<%= pkg.name %>.min.js':['js/src/class/Ball.js',
+         'js/<%= pkg.name %>.min.js':[  'js/src/class/Player.js',
+                                        'js/src/class/Ball.js',
                                         'js/src/class/ComputerPlayer.js',
                                         'js/src/class/HumanPlayer.js',
-                                        'js/src/class/Player.js',
                                         'js/src/plugin.js']
         }
       }

@@ -2,11 +2,14 @@ var assert = require("assert");
 var Ball=require("../src/class/Ball.js");
 var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
 var Window = require("./class/WindowMock.js");
-
+var jQuery=require("./class/jQueryMock.js");
+PLAYER_RIGHT=1
 describe('Ball', function(){
 	// Mock window variable globally
 	 window = new Window();
-  	var ball=new Ball(HTMLCanvasElement());
+  	 // Mock jqQery variable globally
+   $ = new jQuery();
+    var ball=new Ball(HTMLCanvasElement());
 
   	describe('#getEdgeHitValue()',function(){
   		var dimension=10
@@ -67,6 +70,17 @@ describe('Ball', function(){
 
   		});
 
+      describe('#reset()',
+          function(){
+
+          }
+      );
+
+      describe('#reset()',
+          function(){
+
+          }
+      );
 
 
   	});

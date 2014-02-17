@@ -28,6 +28,7 @@
             this.ball={
                 x:x,
                 y:y,
+                reset:function(){},
                 radius:5
             }
           }
