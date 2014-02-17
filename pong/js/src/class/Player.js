@@ -179,14 +179,10 @@ var Player = function(elem,side){
 		this.direct=0;	
 	};
 
-	/**
-	 * should be overwritten from generalisations to implement
-	 * certain behaviour
-	 * @return {Null} 
-	 */
-	this.init=function(){};
-
-	this.init();
+	//calls init method if the method is set
+	if(this.init){
+		this.init();
+	}
 	
 
 };
