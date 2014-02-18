@@ -1,9 +1,9 @@
 /**
  * Player extention for human controlled player
- * @param {HTMLCanvasElement} elem
+ * @param {CanvasRenderingContext2D} ctx
  * @param {Number} side (PLAYER_LEFT|PLAYER_RIGHT)
  */
-var HumanPlayer=function(elem,side){
+var HumanPlayer=function(ctx,side){
 	/**
 	 * Referenze identification in canvas (ctx) scope
 	 * @type {String}
@@ -31,7 +31,7 @@ var HumanPlayer=function(elem,side){
 		);
 	};
 	
-	Player.call(this, elem,side);
+	Player.call(this, ctx,side);
 	
 };
 

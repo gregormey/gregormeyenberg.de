@@ -24,10 +24,10 @@ var PLAYER_MOVEDOWN=1;
 
 /**
  * Player Class, handles Player interactions with user, ball and opponenents
- * @param {HTMLCanvasElement} elem
+ * @param {CanvasRenderingContext2D} ctx
  * @param {Number} side (PLAYER_LEFT|PLAYER_RIGHT)
  */
-var Player = function(elem,side){
+var Player = function(ctx,side){
 	
 	/**
 	 * initial y cordinate of the player
@@ -61,11 +61,7 @@ var Player = function(elem,side){
 	 */
 	this.direct=0;
 
-	/**
-	 * Canvas element
-	 * @type {HTMLCanvasElement}
-	 */
-	this.elem=elem;
+	
 	/**
 	 * side (PLAYER_LEFT|PLAYER_RIGHT)
 	 * @type {Number}
@@ -85,6 +81,12 @@ var Player = function(elem,side){
 	 */
 	this.score = 0
 
+	/**
+	 * Rendering Context
+	 * @type {CanvasRenderingContext2D}
+	 */
+	this.ctx=ctx;
+
 	if(this.side==PLAYER_LEFT){
 		/**
 		 * place player on left side
@@ -96,17 +98,10 @@ var Player = function(elem,side){
 		 * place player on right side
 		 * @type {Number}
 		 */
-		this.x=$(this.elem).innerWidth()-(this.width+5);
+		this.x=this.ctx.width-(this.width+5);
 	}
 
-	/**
-	 * Rendering Context
-	 * @type {CanvasRenderingContext2D}
-	 */
-	this.ctx=elem.getContext('2d');
-
-	//Draw Player initially
-	this.ctx.fillRect(this.x,this.y,this.width,this.height);
+	
 
 	/**
 	 * increments score points and displays score
@@ -152,16 +147,15 @@ var Player = function(elem,side){
 	 * @return {Null}
 	 */
 	this.draw=function(){
-		h=$(this.elem).innerHeight();
+		h=this.ctx.height;
 		var inc=this.speed*this.direct;
 		if((this.y+inc)<(h-this.height)
 			&& (this.y+inc)>0
 		){
-			this.ctx.clearRect(this.x,0,this.width+6,h);
 			this.y+=inc;
-			this.ctx.fillRect(this.x,this.y,this.width,this.height);
 		}
-			this.speed+=0.2;
+		this.speed+=0.2;
+		this.ctx.fillRect(this.x,this.y,this.width,this.height);
 	};
 
 	/**
@@ -173,12 +167,10 @@ var Player = function(elem,side){
 		if(direction==PLAYER_MOVEUP){
 			if(!this.interval){
 				this.direct=-1;
-				this.interval=window.setInterval("$.fn.pong.ctx['"+this.elem.id+"']."+this.ctxReference+".draw();",1);
 			}
 		}else if(direction==PLAYER_MOVEDOWN){
 			if(!this.interval){	
 				this.direct=1;
-				this.interval=window.setInterval("$.fn.pong.ctx['"+this.elem.id+"']."+this.ctxReference+".draw();",1);
 			}
 		}
 	};
@@ -188,7 +180,6 @@ var Player = function(elem,side){
 	 * @return {Null}
 	 */
 	this.stop=function(){
-		window.clearInterval(this.interval);
 		this.interval=false;
 		this.speed=1;
 		this.direct=0;	

@@ -9,7 +9,7 @@ describe('Ball', function(){
 	 window = new Window();
   	 // Mock jqQery variable globally
    $ = new jQuery();
-    var ball=new Ball(HTMLCanvasElement());
+    var ball=new Ball(HTMLCanvasElement().getContext());
 
   	describe('#getEdgeHitValue()',function(){
   		var dimension=10

@@ -3,6 +3,8 @@
  	return {	
   		getContext:function(){
   			return {
+          width:400,
+          height:300,
   				beginPath:function(){
   					
   				},

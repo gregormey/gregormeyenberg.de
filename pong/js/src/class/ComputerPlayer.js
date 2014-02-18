@@ -1,9 +1,9 @@
 /**
  * Player extention for computer controlled player
- * @param {HTMLCanvasElement} elem
+ * @param {CanvasRenderingContext2D} ctx
  * @param {Number} side (PLAYER_LEFT|PLAYER_RIGHT)
  */
-var ComputerPlayer=function(elem,side){
+var ComputerPlayer=function(ctx,side){
 	/**
 	 * Referenze identification in canvas (ctx) scope
 	 * @type {String}
@@ -46,11 +46,12 @@ var ComputerPlayer=function(elem,side){
 	 * initial call of the move method
 	 * @return {[type]}
 	 */
-	this.init=function(){
-		window.setInterval("$.fn.pong.ctx['"+this.elem.id+"']."+this.ctxReference+".moveToBall();",1);
+	this.draw=function(){
+		this.moveToBall();
+
 	};
 	
-	Player.call(this, elem,side);
+	this.super=Player.call(this, ctx,side);
 	
 };
 

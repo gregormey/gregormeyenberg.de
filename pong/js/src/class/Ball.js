@@ -1,8 +1,8 @@
 /**
  * Ball class, handles the Ball movements
- * @param {HTMLCanvasElement} elem
+ * @param {CanvasRenderingContext2D} ctx
  */
-var Ball=function(elem){
+var Ball=function(ctx){
 	
 
 	/**
@@ -26,19 +26,14 @@ var Ball=function(elem){
 	 * @type {Number}
 	 */
 	this.radius=5;
-	/**
-	 * Canvas Element
-	 * @type {HTMLCanvasElement}
-	 */
-	this.elem=elem;
-
+	
 	
 
 	/**
 	 * Rendering Context
 	 * @type {CanvasRenderingContext2D}
 	 */
-	this.ctx=elem.getContext('2d');
+	this.ctx=ctx;
 
 	/**
 	 * sets ball back to middle point after score
@@ -46,8 +41,8 @@ var Ball=function(elem){
 	 * @return {Null}      [description]
 	 */
 	this.reset=function(side){
-		this.x=$(elem).innerWidth()/2;
-		this.y=$(elem).innerHeight()/2;
+		this.x=ctx.width/2;
+		this.y=ctx.height/2;
 		//set the direction related to the side parameter
 		this.incX=side==PLAYER_RIGHT?-2:2;
 		this.incY=0;
@@ -69,14 +64,10 @@ var Ball=function(elem){
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);// Outer circle
         this.ctx.fill();
         
-        window.setTimeout("$.fn.pong.ctx['"+this.elem.id+"'].ball.move()",1);
+        this.move();
 
 	};
 
-	/**
-	 * initian callof the draw method
-	 */
-	this.draw();
 
 	/**
 	 * Checks if ball is on the edge's of the playground
@@ -134,12 +125,11 @@ var Ball=function(elem){
 	 * @return {void}
 	 */
 	this.move=function(){
-		//clear ball
-		this.ctx.clearRect(this.x-this.radius,this.y-this.radius-1,this.radius*2+ 2,this.radius*2+ 2);
+		
 		
 		//get dimensions
-		h=$(this.elem).innerHeight();
-		w=$(this.elem).innerWidth();
+		h=ctx.height;
+		w=ctx.width;
 		
 
 		//check if ball hits upper or down edges and turns direction or just returns increment valte
@@ -155,9 +145,6 @@ var Ball=function(elem){
 
 		//checks if a player scores
 		this.checkScore(w);
-
-
-        this.draw(this.incX,this.incY);
 	
 	};
 

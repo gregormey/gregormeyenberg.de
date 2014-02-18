@@ -10,8 +10,8 @@ var jQuery=require("./class/jQueryMock.js");
 describe('Player', function(){
 		// Mock jqQery variable globally
 	 $ = new jQuery();
-	 var playerLeft=new Player(HTMLCanvasElement(),0);
-	 var playerRight=new Player(HTMLCanvasElement(),1);
+	 var playerLeft=new Player(HTMLCanvasElement().getContext(),0);
+	 var playerRight=new Player(HTMLCanvasElement().getContext(),1);
 
 	it("places Player on the left side of the playground",
   			function(){
@@ -103,7 +103,7 @@ describe('Player', function(){
       );
 
 describe('ComputerPlayer',function(){
-	var computer=new ComputerPlayer(HTMLCanvasElement(),0);
+	var computer=new ComputerPlayer(HTMLCanvasElement().getContext(),0);
 	describe('#moveToBall()', function(){
 		// register required const
 		PLAYER_MOVEUP=0;
