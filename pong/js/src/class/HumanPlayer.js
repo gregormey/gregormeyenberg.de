@@ -9,10 +9,17 @@ var HumanPlayer=function(ctx,side){
 	 * @type {String}
 	 */
 	this.ctxReference="player";
+	
+	/**
+	 * speed increment
+	 * @type {Number}
+	 */
+	 this.speedInc=0.01;
 	/**
 	 * sets key events for player controll
 	 * @return {Null}
 	 */
+	
 	this.init=function(){
 		$(document).keydown(
 			$.proxy(function(event){

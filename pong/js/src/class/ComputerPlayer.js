@@ -28,27 +28,35 @@ var ComputerPlayer=function(ctx,side){
 	this.beforeDraw=function(){
 		var middle=this.y+(this.height/2);
 		if(this.ctx.ball.y<middle){
-			this.stop();
+			
 			//only of if distance is greater then 5 px
 			if((middle-this.ctx.ball.y)>5){
 				this.moveUp=true;
 				this.moveDown=false;
 				this.move(PLAYER_MOVEUP);
+			}else{
+				this.stop();
 			}
 		}
-		else if (this.ctx.ball.y>middle){
-			this.stop();
+		else if (this.ctx.ball.y>middle){	
+				
 			//only of if distance is greater then 5 px
 			if((this.ctx.ball.y-middle)>5){
 				this.moveUp=false;
 				this.moveDown=true;
 				this.move(PLAYER_MOVEDOWN);
+			}else{
+				this.stop();
 			}
+		}else{
+			this.stop();
 		}
 	};
-
+	//computer should be faster for abalcing reasons
+	this.speedInc=0.01;
 	
 	Player.call(this, ctx,side);
+	
 	
 };
 

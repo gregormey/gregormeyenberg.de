@@ -159,7 +159,8 @@ var Player = function(ctx,side){
 		){
 			this.y+=inc;
 		}
-		this.speed+=0.01;
+		//no speed booth by default
+		this.speed+=this.speedInc?this.speedInc:0;
 		this.ctx.fillRect(this.x,this.y,this.width,this.height);
 	};
 
