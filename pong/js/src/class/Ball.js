@@ -38,7 +38,7 @@ var Ball=function(elem){
 	 * Rendering Context
 	 * @type {CanvasRenderingContext2D}
 	 */
-	var ctx=elem.getContext('2d');
+	this.ctx=elem.getContext('2d');
 
 	/**
 	 * sets ball back to middle point after score
@@ -50,6 +50,7 @@ var Ball=function(elem){
 		this.y=$(elem).innerHeight()/2;
 		//set the direction related to the side parameter
 		this.incX=side==PLAYER_RIGHT?-2:2;
+		this.incY=0;
 
 	}
 
@@ -64,9 +65,9 @@ var Ball=function(elem){
 	 * @return {Null}
 	 */
 	this.draw=function(){
-		ctx.beginPath();
-        ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);// Outer circle
-        ctx.fill();
+		this.ctx.beginPath();
+        this.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);// Outer circle
+        this.ctx.fill();
         
         window.setTimeout("$.fn.pong.ctx['"+this.elem.id+"'].ball.move()",1);
 
@@ -121,9 +122,9 @@ var Ball=function(elem){
 	 */
 	this.checkScore=function(w){
 		if(this.x<0){
-			ctx.opponent.addScore();
+			this.ctx.opponent.addScore();
 		}else if(this.x>w){
-			ctx.player.addScore();
+			this.ctx.player.addScore();
 		}
 	}
 
@@ -134,7 +135,7 @@ var Ball=function(elem){
 	 */
 	this.move=function(){
 		//clear ball
-		ctx.clearRect(this.x-this.radius,this.y-this.radius-1,this.radius*2+ 2,this.radius*2+ 2);
+		this.ctx.clearRect(this.x-this.radius,this.y-this.radius-1,this.radius*2+ 2,this.radius*2+ 2);
 		
 		//get dimensions
 		h=$(this.elem).innerHeight();
@@ -150,7 +151,7 @@ var Ball=function(elem){
 		
 
 		//reset x,y coordinates if player hits the ball
-		this.setPlayerHit(ctx.player.hit(),ctx.opponent.hit(),this.incX);
+		this.setPlayerHit(this.ctx.player.hit(),this.ctx.opponent.hit(),this.incX);
 
 		//checks if a player scores
 		this.checkScore(w);

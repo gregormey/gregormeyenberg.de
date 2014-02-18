@@ -72,13 +72,27 @@ describe('Ball', function(){
 
       describe('#reset()',
           function(){
+            it("sets x,y and inc  to initial values to restart game after score", function(){
+                 ball.reset(PLAYER_RIGHT);
+                  assert.equal(ball.incX,-2);
+                  assert.equal(ball.incY,0);
+                  assert.equal(ball.x,200);
+                  assert.equal(ball.y,150);
 
+            });
           }
       );
 
-      describe('#reset()',
+      describe('#checkScore()',
           function(){
+            it("checks if ball is out of the x range of the playground and call player.addScore()")
+            ball.x=301;
+            ball.checkScore(300);
+            assert.equal(ball.ctx.player.score,true);
 
+            ball.x=-1;
+            ball.checkScore(300);
+            assert.equal(ball.ctx.opponent.score,true);            
           }
       );
 
