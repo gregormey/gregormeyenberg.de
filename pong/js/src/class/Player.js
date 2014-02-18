@@ -34,11 +34,7 @@ var Player = function(ctx,side){
 	 * @type {Number}
 	 */
 	this.y=15;
-	/**
-	 * movement interval handle
-	 * @type {Boolean}
-	 */
-	this.interval=false;
+	
 	/**
 	 * Player width
 	 * @type {Number}
@@ -141,12 +137,21 @@ var Player = function(ctx,side){
 					return false;
 	};
 
+
 	/**
 	 * Set new coordinate for Player by speed and direction
 	 * and draws the player
 	 * @return {Null}
 	 */
 	this.draw=function(){
+		/**
+		 * call back function that can be used
+		 * to inject behaviour before the draw of a player
+		 */
+		if(this.beforeDraw){
+			this.beforeDraw();
+		}
+		//checks if player is allowed to move
 		h=this.ctx.height;
 		var inc=this.speed*this.direct;
 		if((this.y+inc)<(h-this.height)
@@ -154,7 +159,7 @@ var Player = function(ctx,side){
 		){
 			this.y+=inc;
 		}
-		this.speed+=0.2;
+		this.speed+=0.01;
 		this.ctx.fillRect(this.x,this.y,this.width,this.height);
 	};
 
@@ -165,13 +170,9 @@ var Player = function(ctx,side){
 	 */
 	this.move=function(direction){
 		if(direction==PLAYER_MOVEUP){
-			if(!this.interval){
 				this.direct=-1;
-			}
 		}else if(direction==PLAYER_MOVEDOWN){
-			if(!this.interval){	
 				this.direct=1;
-			}
 		}
 	};
 

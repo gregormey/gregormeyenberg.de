@@ -22,36 +22,33 @@ var ComputerPlayer=function(ctx,side){
 
 	/**
 	 * moves the player to the ball controlled by the middelpoint of player
-	 * and the ball coordinates
+	 * and the ball coordinates, uses before draw hook method of player 
 	 * @return {Null}
 	 */
-	this.moveToBall=function(){
+	this.beforeDraw=function(){
 		var middle=this.y+(this.height/2);
-		if(this.ctx.ball.y<middle && !this.moveUp){
+		if(this.ctx.ball.y<middle){
 			this.stop();
-			this.moveUp=true;
-			this.moveDown=false;
-			this.move(PLAYER_MOVEUP);
+			//only of if distance is greater then 5 px
+			if((middle-this.ctx.ball.y)>5){
+				this.moveUp=true;
+				this.moveDown=false;
+				this.move(PLAYER_MOVEUP);
+			}
 		}
-		else if (this.ctx.ball.y>middle && !this.moveDown){
+		else if (this.ctx.ball.y>middle){
 			this.stop();
-			this.moveUp=false;
-			this.moveDown=true;
-			this.move(PLAYER_MOVEDOWN);
+			//only of if distance is greater then 5 px
+			if((this.ctx.ball.y-middle)>5){
+				this.moveUp=false;
+				this.moveDown=true;
+				this.move(PLAYER_MOVEDOWN);
+			}
 		}
 	};
 
 	
-	/**
-	 * initial call of the move method
-	 * @return {[type]}
-	 */
-	this.draw=function(){
-		this.moveToBall();
-
-	};
-	
-	this.super=Player.call(this, ctx,side);
+	Player.call(this, ctx,side);
 	
 };
 
