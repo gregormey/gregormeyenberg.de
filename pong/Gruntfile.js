@@ -9,7 +9,7 @@ module.exports = function(grunt) {
          options: {
           reporter: 'spec'
         },
-        src: ['tests/testBall.js','tests/testPlayer.js']
+        src: ['tests/client/testBall.js','tests/client/testPlayer.js']
       }
     },
     uglify: {
@@ -18,11 +18,11 @@ module.exports = function(grunt) {
       },
       my_target:{
         files: {
-         'public/js/<%= pkg.name %>.min.js':[  'src/class/Player.js',
-                                        'src/class/Ball.js',
-                                        'src/class/ComputerPlayer.js',
-                                        'src/class/HumanPlayer.js',
-                                        'src/plugin.js']
+         'public/js/<%= pkg.name %>.min.js':[  'src/client/class/Player.js',
+                                        'src/client/class/Ball.js',
+                                        'src/client/class/ComputerPlayer.js',
+                                        'src/client/class/HumanPlayer.js',
+                                        'src/client/plugin.js']
         }
       }
     }

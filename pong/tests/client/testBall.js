@@ -1,5 +1,5 @@
 var assert = require("assert");
-var Ball=require("../src/class/Ball.js");
+var Ball=require("../../src/client/class/Ball.js");
 var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
 var Window = require("./class/WindowMock.js");
 var jQuery=require("./class/jQueryMock.js");

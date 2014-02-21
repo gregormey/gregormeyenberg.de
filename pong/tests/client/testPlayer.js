@@ -1,8 +1,8 @@
 var assert = require("assert");
 // Player needed to be gloabal to test Computerplayer
-Player=require("../src/class/player.js");
+Player=require("../../src/client/class/Player.js");
 
-var ComputerPlayer=require("../src/class/ComputerPlayer.js");
+var ComputerPlayer=require("../../src/client/class/ComputerPlayer.js");
 var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
 var Window = require("./class/WindowMock.js");
 var jQuery=require("./class/jQueryMock.js");

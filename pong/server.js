@@ -7,7 +7,7 @@ app.engine('html', cons.swig);
 
 // set .html as the default extension 
 app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/src/server/views');
 
 //GET public assets
 app.use(express.static(__dirname + '/public'));
