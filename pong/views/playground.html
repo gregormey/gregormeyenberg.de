@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block externalJS %}
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/pong.min.js"></script>
+{% endblock %}
+
+{% block inlineJS %}
+
+$(document).ready(
+		function(){
+			$('#pong').pong();
+	});
+
+{% endblock %}
+
+{% block content %}
+	<canvas id='pong' width="400" height="300">
+	</canvas>
+	<ul class='score'>
+		<li id='playerScore'>0</li>
+		<li id='opponentScore'>0</li>
+	</ul>
+{% endblock %}
