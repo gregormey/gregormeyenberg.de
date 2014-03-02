@@ -6,12 +6,14 @@
 -record(player,{nick,mail,password}).
 
 install() ->
+	setDataPath(),
 	mnesia:create_schema([node()]),
 	mnesia:start(),
 	mnesia:create_table(player,[{attributes,record_info(fields,player)},{disc_copies,[node()]}]),
 	mnesia:stop().
 
 start()->
+	setDataPath(),
 	mnesia:start(),
 	mnesia:wait_for_tables([player],20000).
 
@@ -29,3 +31,6 @@ do(Q) ->
 	F = fun() -> qlc:e(Q) end,
 	{atomic, Val} = mnesia:transaction(F),
 	Val. 
+
+setDataPath() ->
+	application:set_env(mnesia, dir, "../data").
