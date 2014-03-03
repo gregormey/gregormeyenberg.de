@@ -5,4 +5,4 @@
               {applications,[kernel,stdlib]},
               {mod,{yags_app,[]}},
               {env,[]},
-              {modules,[yags_app,yags_database,yags_sup]}]}.
+              {modules,[yags_app,yags_database,yags_rest,yags_sup]}]}.
