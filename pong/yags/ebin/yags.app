@@ -1,0 +1,8 @@
+{application,yags,
+             [{description,"Yet Another Game Server"},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{yags_app,[]}},
+              {env,[]},
+              {modules,[yags_app,yags_database,yags_sup]}]}.
