@@ -33,4 +33,4 @@ do(Q) ->
 	Val. 
 
 setDataPath() ->
-	application:set_env(mnesia, dir, "../data").
+	application:set_env(mnesia, dir, "yags/data").
