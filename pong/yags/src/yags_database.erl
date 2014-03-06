@@ -17,6 +17,7 @@ start()->
 	mnesia:start(),
 	mnesia:wait_for_tables([player],20000).
 
+	
 add_player(Nick,Mail,Password) ->
 	Row = #player{nick=Nick, mail=Mail, password=Password},
 	F = fun() ->

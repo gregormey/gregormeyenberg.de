@@ -23,5 +23,11 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
+	application:start(crypto),
+	application:start(ranch),
+	application:start(cowboy),
+	application:start(leptus),
+	leptus:start_http(yags),
+	yags_database:start(), 
     {ok, { {one_for_one, 5, 10}, []} }.
 
