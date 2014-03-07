@@ -23,8 +23,8 @@ get("/players/", _Req, State) ->
 
 post("/player/new", Req, State)->
 	[{<<"Nick">>,Nick},{<<"Mail">>,Mail},{<<"Password">>,Password}]=leptus_req:body_qs(Req),
-	yags_database:add_player(Nick,Mail,Password),
-	NewPlayerRoute=list_to_binary("/player/"++binary_to_list(Nick)),
+	NewPlayer=yags_database:add_player(Nick,Mail,Password),
+	NewPlayerRoute=list_to_binary("/player/"++binary_to_list(NewPlayer)),
 	 {201, [{<<"Location">>, NewPlayerRoute}], <<"created">>, State}.
 
 terminate(_Reason, _Req, _State) ->
