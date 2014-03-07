@@ -8,6 +8,7 @@
 -export([terminate/3]).
 
 init(_Route, _Req, State) ->
+    yags_database:start(),
     {ok, State}.
 
 get("/players/", _Req, State) ->
