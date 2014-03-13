@@ -15,6 +15,7 @@
 
 -export([install/0]).
 -export([start/0]).
+-export([start_link/0]).
 -export([stop/0]).
 -export([add_player/3]).
 -export([show/1]).
@@ -34,6 +35,7 @@ install() ->
 	mnesia:stop().
 
 start()-> gen_server:start_link({local,?MODULE},?MODULE,[], []).
+start_link() -> gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 stop()-> gen_server:call(?MODULE, stop).
 
 add_player(Nick,Mail,Password) -> gen_server:call(?MODULE,{add_player, Nick,Mail,Password}).

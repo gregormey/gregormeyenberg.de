@@ -8,7 +8,6 @@
 -export([terminate/3]).
 
 init(_Route, _Req, State) ->
-    yags_database:start(),
     {ok, State}.
 
 get("/players/", _Req, State) ->
@@ -18,7 +17,6 @@ get("/players/", _Req, State) ->
     			{<<"Password">>,Password}]|| 
     			{player,Nick,Mail,Password} <- yags_database:show(player)],
     {Status, {json, Players}, State}.
-
 
 
 post("/player/new", Req, State)->

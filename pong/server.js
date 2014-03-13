@@ -1,6 +1,12 @@
+// for command line execution
+var sys = require('sys')
+var exec = require('child_process').exec;
+
 var express = require('express')
   , cons = require('consolidate')
   , app = express();
+
+
 
 // assign the swig engine to .html files
 app.engine('html', cons.swig);
@@ -34,6 +40,10 @@ app.get('/play', function(req, res){
   	});
 });
 
+//start yags
+exec("erl -pa yags/ebin yags/deps/*/ebin -noshell -s yags start_server", 
+  function puts(error, stdout, stderr) { console.log(stdout) });
 
 app.listen(80);
 console.log('Pong Frontend Server listening port 80');
+console.log('Pong Backend Server listening port 8000');
