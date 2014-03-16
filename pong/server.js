@@ -3,13 +3,13 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 
 var express = require('express')
-  , cons = require('consolidate')
+  , swig = require('swig')
   , app = express();
 
 
 
 // assign the swig engine to .html files
-app.engine('html', cons.swig);
+app.engine('html', swig.renderFile);
 
 // set .html as the default extension 
 app.set('view engine', 'html');
@@ -17,6 +17,12 @@ app.set('views', __dirname + '/src/server/views');
 
 //GET public assets
 app.use(express.static(__dirname + '/public'));
+
+//disable view cache for developnment enviroment
+if(process.argv[2]=='-dev'){
+  app.set('view cache', false);
+  swig.setDefaults({ cache: false });
+}
 
 app.get('/', function(req, res){
 	res.send("");
