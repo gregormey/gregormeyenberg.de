@@ -23,7 +23,7 @@
 -include_lib("stdlib/include/qlc.hrl").
 
 %table definitions
--record(player,{nick,mail,password}).
+-record(player,{nick,mail,password,hash}).
 
 
 %% interfaces
@@ -42,7 +42,9 @@ add_player(Nick,Mail,Password) -> gen_server:call(?MODULE,{add_player, Nick,Mail
 show(player) ->  gen_server:call(?MODULE,{show, player}).
 
 
-%% internal
+
+
+%% internal Start --
 do(Q) ->
 	F = fun() -> qlc:e(Q) end,
 	{atomic, Val} = mnesia:transaction(F),
@@ -52,6 +54,8 @@ setDataPath() ->
 	application:set_env(mnesia, dir, "yags/data").
 
 
+%% internal End --
+
 %% gen_server
 init([]) ->
     setDataPath(),
@@ -60,6 +64,8 @@ init([]) ->
     {ok, ?MODULE}.
 
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
+	Salt =yags_config:get_value(security,salt, "sosecure"),
+	
 	Row = #player{nick=Nick, mail=Mail, password=Password},
 	F = fun() ->
 			mnesia:write(Row)

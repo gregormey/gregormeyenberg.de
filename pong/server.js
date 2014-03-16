@@ -40,6 +40,12 @@ app.get('/register', function(req, res){
   	});
 });
 
+app.post('/register', function(){
+  
+}
+
+);
+
 app.get('/play', function(req, res){
 	res.render('playground', {
     	title: 'Play Pong'

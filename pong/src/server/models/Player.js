@@ -1,5 +1,9 @@
-var Player=function(){};
+var Player=function(){
+	this.hash=null;
+};
 
-Player.prototype.load=function(hash){};
+Player.prototype.login=function(nick,password){};
 
-Player.prototype.create=function(nick,mail,password){};
+Player.prototype.create=function(nick,mail,password){
+	
+};
