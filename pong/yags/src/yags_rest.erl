@@ -12,10 +12,11 @@ init(_Route, _Req, State) ->
 
 get("/players/", _Req, State) ->
     Status = 200,
-    Players= [[{<<"Nick">>,Nick},
-    			{<<"Mail">>,Mail},
-    			{<<"Password">>,Password}]|| 
-    			{player,Nick,Mail,Password} <- yags_database:show(player)],
+    Players= [[{<<"Hash">>,list_to_binary(Hash)},
+                {<<"Nick">>,list_to_binary(Nick)},
+    			{<<"Mail">>,list_to_binary(Mail)},
+                {<<"Score">>,Score}]|| 
+    			{player,Hash,Nick,Mail,Score} <- yags_database:show(player)],
     {Status, {json, Players}, State}.
 
 
