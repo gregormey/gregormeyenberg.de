@@ -20,6 +20,7 @@
 -export([add_player/3]).
 -export([find_player/1]).
 -export([find_player/2]).
+-export([delete_player/1]).
 -export([show/1]).
 -export([update_schema/0]).
 
@@ -47,6 +48,7 @@ stop()-> gen_server:call(?MODULE, stop).
 add_player(Nick,Mail,Password) -> gen_server:call(?MODULE,{add_player, Nick,Mail,Password}).
 find_player(Hash) -> gen_server:call(?MODULE,{find_player, Hash}).
 find_player(Nick,Password) -> gen_server:call(?MODULE,{find_player, Nick,Password}).
+delete_player(Nick) -> gen_server:call(?MODULE,{delete_player, Nick}).
 show(player) ->  gen_server:call(?MODULE,{show, player}).
 update_schema() -> gen_server:call(?MODULE,{update_schema}).
 
@@ -63,9 +65,23 @@ getHash(Nick,Password)->
 	Salt =yags_config:get_value(config,[security,salt], <<"soooosecure">>),
 	hmac:hexlify(hmac:hmac256(Salt,list_to_binary(Nick ++ Password))).
 
-findPlayer(Hash)->
+findPlayer(hash,Hash)->
 	case do(qlc:q([X || X <- mnesia:table(player), 
 							X#player.hash == Hash]))  of
+		[] -> not_a_player;
+		[Player] -> Player
+	end;
+
+findPlayer(nick,Nick)->
+	case do(qlc:q([X || X <- mnesia:table(player), 
+							X#player.nick == Nick]))  of
+		[] -> not_a_player;
+		[Player] -> Player
+	end;
+
+findPlayer(mail,Mail)->
+	case do(qlc:q([X || X <- mnesia:table(player), 
+							X#player.mail == Mail]))  of
 		[] -> not_a_player;
 		[Player] -> Player
 	end.
@@ -77,7 +93,7 @@ writePlayer(Nick,Mail,Password,Score) ->
 			mnesia:write(Row)
 		end,
 	mnesia:transaction(F),
-	findPlayer(Hash).
+	findPlayer(hash,Hash).
 
 %% internal End --
 
@@ -89,15 +105,30 @@ init([]) ->
     {ok, ?MODULE}.
 
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
-	{reply, writePlayer(Nick,Mail,Password,0) , Tab};
+	case findPlayer(mail,Mail) of
+		not_a_player -> case findPlayer(nick,Nick) of
+							not_a_player -> {reply, writePlayer(Nick,Mail,Password,0) , Tab};
+							_ -> {reply, nick_exists , Tab}
+						end;
+		_ -> {reply, mail_exists , Tab}
+	end;
 
 handle_call({find_player,Hash},_From, Tab) ->
-	{reply, findPlayer(Hash), Tab};	
+	{reply, findPlayer(hash,Hash), Tab};	
 
 handle_call({find_player,Nick,Password},_From, Tab) ->
 	Hash = getHash(Nick,Password),
-	{reply, findPlayer(Hash), Tab};	
+	{reply, findPlayer(hash,Hash), Tab};	
 
+handle_call({delete_player,Nick},_From, Tab) ->
+	case findPlayer(nick,Nick) of
+		not_a_player -> {reply, not_a_player, Tab};
+		Player -> {atomic, Val} = mnesia:transaction(
+					fun () -> mnesia:delete_object(Player) end
+					),
+				{reply, Val, Tab}
+	end;
+		
 handle_call({show, player}, _From, Tab) ->
 	Reply =do(qlc:q([X || X <- mnesia:table(player)])),
 	{reply, Reply, Tab};
