@@ -18,12 +18,17 @@
 -export([start_link/0]).
 -export([stop/0]).
 -export([add_player/3]).
+-export([find_player/1]).
+-export([find_player/2]).
 -export([show/1]).
+-export([update_schema/0]).
+
+
 
 -include_lib("stdlib/include/qlc.hrl").
 
 %table definitions
--record(player,{nick,mail,password,hash}).
+-record(player,{hash,nick,mail}).
 
 
 %% interfaces
@@ -34,15 +39,16 @@ install() ->
 	mnesia:create_table(player,[{attributes,record_info(fields,player)},{disc_copies,[node()]}]),
 	mnesia:stop().
 
+
 start()-> gen_server:start_link({local,?MODULE},?MODULE,[], []).
 start_link() -> gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 stop()-> gen_server:call(?MODULE, stop).
 
 add_player(Nick,Mail,Password) -> gen_server:call(?MODULE,{add_player, Nick,Mail,Password}).
+find_player(Hash) -> gen_server:call(?MODULE,{find_player, Hash}).
+find_player(Nick,Password) -> gen_server:call(?MODULE,{find_player, Nick,Password}).
 show(player) ->  gen_server:call(?MODULE,{show, player}).
-
-
-
+update_schema() -> gen_server:call(?MODULE,{update_schema}).
 
 %% internal Start --
 do(Q) ->
@@ -53,6 +59,25 @@ do(Q) ->
 setDataPath() ->
 	application:set_env(mnesia, dir, "yags/data").
 
+getHash(Nick,Password)->
+	Salt =yags_config:get_value(config,[security,salt], <<"soooosecure">>),
+	hmac:hexlify(hmac:hmac256(Salt,list_to_binary(Nick ++ Password))).
+
+findPlayer(Hash)->
+	case do(qlc:q([X || X <- mnesia:table(player), 
+							X#player.hash == Hash]))  of
+		[] -> not_a_player;
+		[Player] -> Player
+	end.
+
+writePlayer(Nick,Mail,Password) ->
+	Hash=getHash(Nick,Password),
+	Row = #player{hash=Hash, nick=Nick, mail=Mail},
+	F = fun() ->
+			mnesia:write(Row)
+		end,
+	mnesia:transaction(F),
+	findPlayer(Hash).
 
 %% internal End --
 
@@ -64,18 +89,26 @@ init([]) ->
     {ok, ?MODULE}.
 
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
-	Salt =yags_config:get_value(security,salt, "sosecure"),
-	
-	Row = #player{nick=Nick, mail=Mail, password=Password},
-	F = fun() ->
-			mnesia:write(Row)
-		end,
-	mnesia:transaction(F),
-	{reply, Nick, Tab};
+	{reply, writePlayer(Nick,Mail,Password) , Tab};
+
+handle_call({find_player,Hash},_From, Tab) ->
+	{reply, findPlayer(Hash), Tab};	
+
+handle_call({find_player,Nick,Password},_From, Tab) ->
+	Hash = getHash(Nick,Password),
+	{reply, findPlayer(Hash), Tab};	
 
 handle_call({show, player}, _From, Tab) ->
 	Reply =do(qlc:q([X || X <- mnesia:table(player)])),
 	{reply, Reply, Tab};
+
+handle_call({update_schema},_From, Tab) ->
+	Fun=yags_config:get_value(update,[update,schema], fun(X)->X end),
+	mnesia:transform_table(player, 
+			Fun
+			, record_info(fields,player)),
+	{reply, ok, Tab};
+
 
 handle_call(stop, _From, Tab) ->
 	{stop, normal, stopped, Tab}.
