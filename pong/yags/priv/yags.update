@@ -1,7 +1,7 @@
 {update,
  		[{schema,
- 			fun({player,Nick,Mail,Password,Hash})->
-				{player,Hash,Nick,Mail}
-			end
+ 			"fun({player,Hash,Nick,Mail})->
+ 							{player,Hash,Nick,Mail,0}
+ 						end."
 		}]
 }.

@@ -28,7 +28,7 @@
 -include_lib("stdlib/include/qlc.hrl").
 
 %table definitions
--record(player,{hash,nick,mail}).
+-record(player,{hash,nick,mail,score}).
 
 
 %% interfaces
@@ -70,9 +70,9 @@ findPlayer(Hash)->
 		[Player] -> Player
 	end.
 
-writePlayer(Nick,Mail,Password) ->
+writePlayer(Nick,Mail,Password,Score) ->
 	Hash=getHash(Nick,Password),
-	Row = #player{hash=Hash, nick=Nick, mail=Mail},
+	Row = #player{hash=Hash, nick=Nick, mail=Mail, score=Score},
 	F = fun() ->
 			mnesia:write(Row)
 		end,
@@ -89,7 +89,7 @@ init([]) ->
     {ok, ?MODULE}.
 
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
-	{reply, writePlayer(Nick,Mail,Password) , Tab};
+	{reply, writePlayer(Nick,Mail,Password,0) , Tab};
 
 handle_call({find_player,Hash},_From, Tab) ->
 	{reply, findPlayer(Hash), Tab};	
@@ -103,11 +103,11 @@ handle_call({show, player}, _From, Tab) ->
 	{reply, Reply, Tab};
 
 handle_call({update_schema},_From, Tab) ->
-	Fun=yags_config:get_value(update,[update,schema], fun(X)->X end),
-	mnesia:transform_table(player, 
+	Fun=yags_config:get_fun(update,[update,schema], "fun(X)->X end."),
+	{reply, mnesia:transform_table(player, 
 			Fun
 			, record_info(fields,player)),
-	{reply, ok, Tab};
+	ok, Tab};
 
 
 handle_call(stop, _From, Tab) ->

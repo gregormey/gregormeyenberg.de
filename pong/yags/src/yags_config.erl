@@ -2,7 +2,8 @@
 -author("Gregor Meyenberg <gregor@meyenberg.de>").
 
 -export([get_value/3]).
--export([config_file/2]).
+-export([get_fun/3]).
+
 
 
 %% read priv/yags.config file
@@ -24,6 +25,13 @@ priv_dir(App) ->
             PrivDir
     end.
     
+get_fun(update,Keys,Default) ->
+	Value=get_value(update,Keys,Default),
+	{ok, Ts, _} = erl_scan:string(Value),
+  	{ok, Exprs} = erl_parse:parse_exprs(Ts),
+  	{value, Fun, _} = erl_eval:exprs(Exprs, []),
+  	Fun.
+
 get_value(config,Keys,Default) ->
 	Config=config_file(yags,"yags.config"),
 	get_value(Keys,Config,Default);
