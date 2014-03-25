@@ -8,10 +8,11 @@ describe('Player', function(){
   			host: "127.0.0.1",
  			 port: 8000
 	});
-
-	it("register a player",function(done){
-		myPlayer.create("test3","test3","test",
-			function(){
+	
+	it("registers a player and expects 201 response code",function(done){
+		myPlayer.create("test4","test4","test",
+			function(res){
+				assert.equal(res.statusCode,201);
 				done();
 			},
 			function(err){

@@ -37,11 +37,12 @@ Player.prototype.create=function(nick,mail,password,onSuccess,onError){
 
 	var post_req=http.request(options, function(res) {
   			res.setEncoding('utf8');
-  			
-  			res.on('error', function(e) {
-  					onError(e);
-			});
+  			onSuccess(res);
 	});
+
+  post_req.on('error', function(e) {
+            onError(e);
+      });
   post_req.write(data);
   post_req.end();
 };
