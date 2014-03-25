@@ -6,7 +6,15 @@ var express = require('express')
   , swig = require('swig')
   , app = express();
 
+var Player=require("./src/server/models/Player.js");
 
+/**
+ * yags config
+ */
+var yags_config={
+  host: "127.0.0.1",
+  port: 8000
+};
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
@@ -17,6 +25,9 @@ app.set('views', __dirname + '/src/server/views');
 
 //GET public assets
 app.use(express.static(__dirname + '/public'));
+
+//use url encode for post requests
+app.use(express.urlencoded());
 
 //disable view cache for developnment enviroment
 if(process.argv[2]=='-dev'){
@@ -40,8 +51,20 @@ app.get('/register', function(req, res){
   	});
 });
 
-app.post('/register', function(){
-  
+app.post('/register', function(req, res){
+  player = new Player(yags_config);
+  player.create(req.body.Nick, 
+                req.body.Mail, 
+                req.body.Password,
+                function(){
+                  res.render('playground', {
+                        title: 'Play Pong'
+                    });
+                },
+                function(msg){
+                    res.send(msg);
+                }
+    );
 }
 
 );

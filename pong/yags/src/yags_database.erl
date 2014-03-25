@@ -28,8 +28,8 @@
 
 -include_lib("stdlib/include/qlc.hrl").
 
-%table definitions
--record(player,{hash,nick,mail,score}).
+
+-include("yags_database.hrl").
 
 
 %% interfaces
