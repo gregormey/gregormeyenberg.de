@@ -8,13 +8,7 @@ var express = require('express')
 
 var Player=require("./src/server/models/Player.js");
 
-/**
- * yags config
- */
-var yags_config={
-  host: "127.0.0.1",
-  port: 8000
-};
+
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);

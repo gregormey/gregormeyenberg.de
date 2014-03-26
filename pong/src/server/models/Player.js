@@ -1,9 +1,15 @@
-var http=require("http");
-var querystring = require('querystring');
+var Yags=require("../lib/Yags.js");
 
-var Player=function(config){
+/**
+ * Player Class
+ * @param {array of funcions} call back events
+ * Supported events are:
+ * onLoad -> player is loaded
+ */
+var Player=function(events){
 	this.hash=null;
-	this.config=config;
+  this.events=events;
+
 };
 
 Player.prototype.login=function(nick,password){};
@@ -13,38 +19,18 @@ Player.prototype.login=function(nick,password){};
  * @param  {[type]} nick      [description]
  * @param  {[type]} mail      [description]
  * @param  {[type]} password  [description]
- * @param  {[type]} onSuccess [description]
- * @param  {[type]} onError   [description]
- * @return {[type]}           [description]
  */
-Player.prototype.create=function(nick,mail,password,onSuccess,onError){
-	var data = querystring.stringify({
-      Nick: nick,
-      Mail: mail,
-      Password:password
-    });
-
-	var options = {
-		host: this.config.host,
-  		port: this.config.port,
-  		path: '/player/new',
-  		method: 'POST',
-		  headers: {
-        	'Content-Type': 'application/x-www-form-urlencoded',
-        	'Content-Length': data.length
-    	}
-	};
-
-	var post_req=http.request(options, function(res) {
-  			res.setEncoding('utf8');
-  			onSuccess(res);
-	});
-
-  post_req.on('error', function(e) {
-            onError(e);
-      });
-  post_req.write(data);
-  post_req.end();
+Player.prototype.create=function(nick,mail,password){
+	var me=this;
+  Yags.post("/player/new",
+            {Nick:nick,
+              Mail:mail,
+              Password:password},
+              function(res){
+                if(me.events['load'])  
+                  me.events['load'](res);
+              }
+              );
 };
 
 module.exports=Player;
