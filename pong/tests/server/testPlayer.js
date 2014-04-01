@@ -15,6 +15,20 @@ describe('Player', function(){
                 	assert.equal(yags.statusCode,201);
 					done();
               	}
-             );
+         );
 	});
+
+	it("trys to create an existing player and expects 409 response code",function(done){
+		
+		Yags.post("/player/new",
+            {Nick:"test100",
+              Mail:"test100",
+              Password:"test100"},
+              function(yags){
+                	assert.equal(yags.statusCode,409);
+					done();
+              	}
+         );
+	});
+
 });

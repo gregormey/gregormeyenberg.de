@@ -43,8 +43,16 @@ Yags={
 
 		var post_req=http.request(options, function(res) {
 	  			res.setEncoding('utf8');
-	  			if(callback)	
-	  				callback(res);
+	  			var body = '';
+				  res.on('data', function(chunk) {
+				    body += chunk;
+				  });
+				  res.on('end', function() {
+				    if(callback)	
+	  					callback(res,JSON.parse(body));
+				  });
+
+
 		});
 
 	  	post_req.on('error', function(e) {

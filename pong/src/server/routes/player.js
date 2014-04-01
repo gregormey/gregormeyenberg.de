@@ -11,9 +11,11 @@ exports.add = function(req, res, next){
             {Nick:req.body.Nick,
               Mail:req.body.Mail,
               Password:req.body.Password},
-              function(yags){
+              function(yags,body){
                 	if(yags.statusCode==201){
                 		res.redirect('/play');
+                	}else if(yags.statusCode==409){
+                		res.send(body);
                 	}else{
                 		next(new Error('Error while registration.'));
                 	}

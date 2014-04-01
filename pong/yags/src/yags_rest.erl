@@ -24,10 +24,16 @@ get("/players/", _Req, State) ->
 
 post("/player/new", Req, State)->
 	[{<<"Nick">>,Nick},{<<"Mail">>,Mail},{<<"Password">>,Password}]=leptus_req:body_qs(Req),
-	NewPlayer=yags_database:add_player(binary_to_list(Nick),binary_to_list(Mail),binary_to_list(Password)),
-	
-    NewPlayerRoute=list_to_binary("/player/"++NewPlayer#player.hash),
-	 {201, [{<<"Location">>, NewPlayerRoute}], <<"created">>, State}.
+	case yags_database:add_player(binary_to_list(Nick),
+                                binary_to_list(Mail),
+                                binary_to_list(Password)) of 
+            mail_exists->{409, {json,[{<<"Msg">>,<<"Mail exists">>}]},State};
+            nick_exists->{409, {json,[{<<"Msg">>,<<"Nick exists">>}]},State};
+            NewPlayer->{201, [{<<"Location">>, 
+                                list_to_binary("/player/"++NewPlayer#player.hash)}], 
+                                <<"created">>, 
+                        State}
+    end.
 
 terminate(_Reason, _Req, _State) ->
     ok.
