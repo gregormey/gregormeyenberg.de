@@ -6,7 +6,7 @@ var express = require('express')
   , swig = require('swig')
   , app = express();
 
-var Player=require("./src/server/models/Player.js");
+var player = require('./src/server/routes/player');
 
 
 
@@ -45,23 +45,7 @@ app.get('/register', function(req, res){
   	});
 });
 
-app.post('/register', function(req, res){
-  player = new Player(yags_config);
-  player.create(req.body.Nick, 
-                req.body.Mail, 
-                req.body.Password,
-                function(){
-                  res.render('playground', {
-                        title: 'Play Pong'
-                    });
-                },
-                function(msg){
-                    res.send(msg);
-                }
-    );
-}
-
-);
+app.post('/register', player.add);
 
 app.get('/play', function(req, res){
 	res.render('playground', {
