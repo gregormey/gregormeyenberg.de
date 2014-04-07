@@ -1,10 +1,15 @@
 {% extends 'layout.html' %}
 {% block content %}
 	<h1>Create Account</h1>
-	<form method="post" action="/register" >
-		<p><input type="test" name="Nick" placeholder='Nick'/></p>
-		<p><input type="text" name="Mail" placeholder='Email'/></p>
-		<p><input type="password" name="Password" placeholder='password'/></p>
-		<p><input type="submit"  value="register" /></p>
-	</form>
+	<div class='cloumn'>
+		<form method="post" action="/register" >
+			<p><input type="test" name="Nick" placeholder='Nick' value='{{ Nick }}' {% if exists == "nick" %} class="error"{% endif %}/></p>
+			<p><input type="text" name="Mail" placeholder='Email' value='{{ Mail }}' {% if exists == "mail" %} class="error"{% endif %}/></p>
+			<p><input type="password" name="Password" placeholder='password' value='{{ Password }}'/></p>
+			<p><input type="submit"  value="register" /></p>
+		</form>
+	</div>
+	<div class='cloumn'>
+		<p class='error'>{{ msg }}</p>
+	</div>
 {% endblock %}

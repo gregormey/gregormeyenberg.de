@@ -41,7 +41,7 @@ app.get('/login', function(req, res){
 
 app.get('/register', function(req, res){
 	res.render('register', {
-    	title: 'Crete Pong Account'
+    	title: 'Create Pong Account'
   	});
 });
 

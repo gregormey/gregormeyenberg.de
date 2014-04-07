@@ -15,7 +15,24 @@ exports.add = function(req, res, next){
                 	if(yags.statusCode==201){
                 		res.redirect('/play');
                 	}else if(yags.statusCode==409){
-                		res.send(body);
+                    var msg="";
+                    var exists=false;
+                    if(body.Msg=="Mail exists"){
+                        msg="*Another player is already registered with this email address";
+                        exists = "mail";
+                    }else if(body.Msg=="Nick exists"){
+                      msg="*Another player is already registered with this nick";
+                      exists = "nick";
+                    }
+
+                		res.render('register', {
+                        title: 'Create Pong Account',
+                        msg: msg,
+                        exists: exists,
+                        Nick:req.body.Nick,
+                        Mail:req.body.Mail,
+                        Password:req.body.Password
+                     });
                 	}else{
                 		next(new Error('Error while registration.'));
                 	}

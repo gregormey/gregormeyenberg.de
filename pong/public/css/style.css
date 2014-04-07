@@ -24,3 +24,8 @@ ul.score li#playerScore{
 ul.score li#opponentScore {
 	float:right;
 }
+
+p.error{color:#F5837B;width: 200px;font-size:10pt;}
+input.error{background-color: #F5837B}
+
+div.cloumn{float:left;margin-right: 20px;}
