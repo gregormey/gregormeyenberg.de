@@ -105,12 +105,12 @@ init([]) ->
     {ok, ?MODULE}.
 
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
-	case findPlayer(mail,Mail) of
-		not_a_player -> case findPlayer(nick,Nick) of
+	case findPlayer(nick,Nick) of
+		not_a_player -> case findPlayer(mail,Mail) of
 							not_a_player -> {reply, writePlayer(Nick,Mail,Password,0) , Tab};
-							_ -> {reply, nick_exists , Tab}
+							_ -> {reply, mail_exists , Tab}
 						end;
-		_ -> {reply, mail_exists , Tab}
+		_ -> {reply, nick_exists , Tab}
 	end;
 
 handle_call({find_player,Hash},_From, Tab) ->
