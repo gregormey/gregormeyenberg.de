@@ -3,6 +3,7 @@
 
 -export([start_server/0]).
 -export([stop_server/0]).
+-export([restart_server/0]).
 
 -spec start_server() -> {ok, pid()} | {error, any()}.
 
@@ -18,9 +19,7 @@ start_server() ->
 
 -spec stop_server() -> ok | {error, not_found}.
 stop_server() ->
-    leptus:stop_http(),
-    application:stop(yags),
-    application:stop(leptus),
-    application:stop(cowboy),
-    application:stop(ranch),
-    application:stop(crypto).
+    init:stop().
+
+ restart_server() ->
+ 	init:restart().

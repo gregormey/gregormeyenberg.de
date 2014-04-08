@@ -33,7 +33,18 @@ post("/player/new", Req, State)->
                                 list_to_binary("/player/"++NewPlayer#player.hash)}], 
                                 <<"created">>, 
                         State}
-    end.
+    end;
+
+post("/server/:command", Req, State)->
+    case leptus_req:param(command, Req) of
+           <<"stop">> -> 
+                yags:stop_server(),
+                    {200,{json, [{<<"Msg">>,<<"Shutdown triggred">>}]}, State};
+            <<"restart">> -> 
+                yags:restart_server(),
+                    {200,{json, [{<<"Msg">>,<<"Shutdown triggred">>}]}, State};
+            _ -> {403,{json, [{<<"Msg">>,<<"Command not allowed">>}]}, State}
+end. 
 
 terminate(_Reason, _Req, _State) ->
     ok.

@@ -53,10 +53,5 @@ app.get('/play', function(req, res){
   	});
 });
 
-//start yags
-exec("erl -pa yags/ebin yags/deps/*/ebin -noshell -s yags start_server", 
-  function puts(error, stdout, stderr) { console.log(stdout) });
-
 app.listen(80);
 console.log('Pong Frontend Server listening port 80');
-console.log('Pong Backend Server listening port 8000');
