@@ -31,7 +31,7 @@ post("/player/new", Req, State)->
             mail_exists->{409, {json,[{<<"Msg">>,<<"Mail exists">>}]},State};
             NewPlayer->{201, [{<<"Location">>, 
                                 list_to_binary("/player/"++NewPlayer#player.hash)}], 
-                                <<"created">>, 
+                                {json, [{<<"Msg">>,<<"Player created">>}]}, 
                         State}
     end;
 
@@ -42,7 +42,7 @@ post("/server/:command", Req, State)->
                     {200,{json, [{<<"Msg">>,<<"Shutdown triggred">>}]}, State};
             <<"restart">> -> 
                 yags:restart_server(),
-                    {200,{json, [{<<"Msg">>,<<"Shutdown triggred">>}]}, State};
+                    {200,{json, [{<<"Msg">>,<<"Restart triggred">>}]}, State};
             _ -> {403,{json, [{<<"Msg">>,<<"Command not allowed">>}]}, State}
 end. 
 
