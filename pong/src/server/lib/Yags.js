@@ -42,7 +42,7 @@ Yags={
 	  					try{
 	  						var bodyObj= JSON.parse(body);
 	  					}catch (err) {
-	  						 next(new Error('Invalid JSON.'));
+	  						 next(new Error('Invalid JSON:'+body));
 	  					}
 	  					callback(res,bodyObj);
 	  				}

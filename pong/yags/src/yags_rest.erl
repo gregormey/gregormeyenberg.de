@@ -69,11 +69,11 @@ end.
 
 %% DELETE Methods
 
-delete("/player/:nick", Req, State)->
-    Nick=leptus_req:param(nick, Req),
+delete("/player/:id", Req, State)->
+    Nick=leptus_req:param(id, Req),
     case yags_database:delete_player(binary_to_list(Nick)) of
         not_a_player -> {404, {json,[{<<"Msg">>,<<"Player not found">>}]},State};
-        ok -> {200, {json,[{<<"Msg">>,<<"Player delete">>}]},State}
+        ok -> {200, {json,[{<<"Msg">>,<<"Player deleted">>}]},State}
     end.
 
 

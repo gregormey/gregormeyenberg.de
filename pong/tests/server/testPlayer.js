@@ -55,6 +55,9 @@ describe('Player', function(){
           function(yags){
             assert.equal(yags.statusCode,200);
               done();
+          },
+          function(e){
+            throw e;
           }
       );
       post_req.end();
