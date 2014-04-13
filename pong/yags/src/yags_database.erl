@@ -88,7 +88,7 @@ findPlayer(mail,Mail)->
 
 writePlayer(Nick,Mail,Password,Score) ->
 	Hash=getHash(Nick,Password),
-	Row = #player{hash=Hash, nick=Nick, mail=Mail, score=Score},
+	Row = #player{hash=Hash, nick=Nick, mail=Mail, score=Score, registered= os:timestamp()},
 	F = fun() ->
 			mnesia:write(Row)
 		end,
