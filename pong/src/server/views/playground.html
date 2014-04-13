@@ -14,6 +14,8 @@ $(document).ready(
 {% endblock %}
 
 {% block content %}
+<div class='wrapper'>
+	<h1>{{ title }} </h1>
 	<canvas id='pong' width="400" height="300">
 	</canvas>
 	<div id="score">
@@ -26,4 +28,5 @@ $(document).ready(
 			<div id='opponentScore'>0</div>
 		</div>
 	</div>
+</div>
 {% endblock %}

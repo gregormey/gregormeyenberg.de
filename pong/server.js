@@ -34,7 +34,11 @@ if(process.argv[2]=='-dev'){
 }
 
 app.get('/', function(req, res){
-	res.send("");
+	  if(req.session.myPlayer){
+      res.redirect('/play');
+    }else{
+      res.redirect('/login');
+    }
 });
 
 app.get('/login', function(req, res){
