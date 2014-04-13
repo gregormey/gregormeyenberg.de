@@ -104,11 +104,21 @@ var Player={
                           }else{
                             next(new Error('Error while registration.'));
                           }
-                        }
+                        },
+                        next
                      );
+      }
+    },
+
+    login:function(req, res, next){
+         Yags.get("/player/"+req.body.Nick+"?pwd="+req.body.Password
+                      function(yags,body){
+
+                      }
+                    );
     }
-  }
 }
 
 //public routs
 exports.add = Player.add;
+exports.login = Player.login;

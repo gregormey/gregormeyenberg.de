@@ -46,6 +46,7 @@ app.get('/register', function(req, res){
 });
 
 app.post('/register', player.add);
+app.post('/login', player.login);
 
 app.get('/play', function(req, res){
 	res.render('playground', {
