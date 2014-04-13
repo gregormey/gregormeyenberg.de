@@ -9,6 +9,10 @@ var express = require('express')
 var player = require('./src/server/routes/player');
 
 
+//enable cookie session
+app.use(express.cookieParser('MAIKE'));
+app.use(express.cookieSession());
+
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
@@ -48,11 +52,7 @@ app.get('/register', function(req, res){
 app.post('/register', player.add);
 app.post('/login', player.login);
 
-app.get('/play', function(req, res){
-	res.render('playground', {
-    	title: 'Play Pong'
-  	});
-});
+app.get('/play', player.startGame);
 
 app.listen(80);
 console.log('Pong Frontend Server listening port 80');

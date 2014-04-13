@@ -16,8 +16,14 @@ $(document).ready(
 {% block content %}
 	<canvas id='pong' width="400" height="300">
 	</canvas>
-	<ul class='score'>
-		<li id='playerScore'>0</li>
-		<li id='opponentScore'>0</li>
-	</ul>
+	<div id="score">
+		<div class='player'>
+			<div>{{ PlayerNick }}</div>
+			<div id='playerScore'>0</div>
+		</div>
+		<div class='opponent'>
+			<div>{{ OpponentNick }}</div>
+			<div id='opponentScore'>0</div>
+		</div>
+	</div>
 {% endblock %}

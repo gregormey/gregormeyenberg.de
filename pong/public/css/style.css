@@ -13,17 +13,20 @@ h1 {
 	margin-left:40px;
 	
 }
-ul.score{
-	font-size:12pt;	
+div#score{
 	width: 400px;
-	list-style:none;
+	margin-left:40px;
 }
-ul.score li#playerScore{
+
+div#score .player{
 	float:left;
 }
-ul.score li#opponentScore {
+
+div#score .opponent{
 	float:right;
 }
+
+
 
 p.error{color:#F53A2C;width: 200px;font-size:10pt;}
 input.error{background-color: #F5837B}

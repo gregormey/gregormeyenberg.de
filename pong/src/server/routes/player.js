@@ -43,11 +43,11 @@ var Player={
    */
   validateInput:function(req, res){
       if(!Player.isNickValid(req.body.Nick)){
-        Player.renderErr(res,req,TextCatalog.invalidNick,"nick");
+        Player.renderErr(res,req,TextCatalog.invalidNick,"nick","register");
       }else if(!Player.isMailValid(req.body.Mail)){
-        Player.renderErr(res,req,TextCatalog.invalidMail,"mail");
+        Player.renderErr(res,req,TextCatalog.invalidMail,"mail","register");
       }else if(!Player.isPasswordValid(req.body.Password))
-        Player.renderErr(res,req,TextCatalog.invalidPassword,"password");
+        Player.renderErr(res,req,TextCatalog.invalidPassword,"password","register");
       else{
         return true;
       }
@@ -62,8 +62,8 @@ var Player={
    * @param  {[type]} erroField [description]
    * @return {[type]}           [description]
    */
-  renderErr:function(res,req,msg,errorField){
-    res.render('register', {
+  renderErr:function(res,req,msg,errorField,template){
+    res.render(template, {
                     title: TextCatalog.createAccountTitle,
                     msg: msg,
                     errorField: errorField,
@@ -100,7 +100,7 @@ var Player={
                               msg=TextCatalog.nickExists;
                               errorField = "nick";
                             }
-                            Player.renderErr(res,req,msg,errorField);                   
+                            Player.renderErr(res,req,msg,errorField,'register');                   
                           }else{
                             next(new Error('Error while registration.'));
                           }
@@ -110,15 +110,46 @@ var Player={
       }
     },
 
+    /**
+     * Player Login
+     * @param  {[type]}   req  [description]
+     * @param  {[type]}   res  [description]
+     * @param  {Function} next [description]
+     * @return {[type]}        [description]
+     */
     login:function(req, res, next){
-         Yags.get("/player/"+req.body.Nick+"?pwd="+req.body.Password
-                      function(yags,body){
-
+         Yags.get("/player/"+req.body.Nick+"?pwd="+req.body.Password,
+                      function(yags,myPlayer){
+                          if(myPlayer.Hash){
+                            req.session.myPlayer=myPlayer;
+                            res.redirect("/play");
+                          }else{
+                            Player.renderErr(res,req,TextCatalog.loginFail,"","login"); 
+                          }
                       }
                     );
+    },
+
+    /**
+     * start a game
+     * @param  {[type]}   req  [description]
+     * @param  {[type]}   res  [description]
+     * @param  {Function} next [description]
+     * @return {[type]}        [description]
+     */
+    startGame:function(req, res, next){
+        if(req.session.myPlayer){
+           res.render("playground", {
+              title: TextCatalog.playgroundTitle,
+              PlayerNick:req.session.myPlayer.Nick
+           });
+        }else{
+          res.redirect("/login");
+        }
     }
 }
 
 //public routs
 exports.add = Player.add;
 exports.login = Player.login;
+exports.startGame = Player.startGame;

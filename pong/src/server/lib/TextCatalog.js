@@ -8,7 +8,9 @@ TextCatalog={
     nickExists:"*Another player is already registered with this nick name",
     invalidNick:"Your nick has to be at least 3 digits long",
     invalidMail:"This is not a valid mail adress",
-    invalidPassword:"Your password has to be at least 3 digits long"
+    invalidPassword:"Your password has to be at least 3 digits long",
+    loginFail:"Wrong Password or Nick Name",
+    playgroundTitle:"Play Pong!"
 }
 
 module.exports=TextCatalog;
