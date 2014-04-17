@@ -5,6 +5,7 @@
 -export([init/3]).
 -export([get/3]).
 -export([post/3]).
+-export([put/3]).
 -export([delete/3]).
 -export([terminate/3]).
 
@@ -66,6 +67,16 @@ post("/server/:command", Req, State)->
                     {200,{json, [{<<"Msg">>,<<"Restart triggered">>}]}, State};
             _ -> {403,{json, [{<<"Msg">>,<<"Command not allowed">>}]}, State}
 end. 
+
+%% PUT Methods
+put("/player/:id", Req, State) ->
+    case leptus_req:body_qs(Req) of
+        [{<<"Hash">>,Hash,<<"Login">>,<<"1">>}] -> 
+            {200, {json, formatPlayer(yags_database:login_player(Hash))}, State};
+        [{<<"Hash">>,Hash,<<"Logout">>,<<"1">>}] ->
+            {200, {json, formatPlayer(yags_database:logout_player(Hash))}, State};
+         _ -> {403,{json, [{<<"Msg">>,<<"Parameter not matching">>}]}, State}
+end.
 
 %% DELETE Methods
 
