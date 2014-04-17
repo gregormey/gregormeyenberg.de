@@ -20,6 +20,8 @@
 -export([add_player/3]).
 -export([find_player/1]).
 -export([find_player/2]).
+-export([login_player/1]).
+-export([logout_player/1]).
 -export([delete_player/1]).
 -export([show/1]).
 -export([update_schema/0]).
@@ -48,6 +50,8 @@ stop()-> gen_server:call(?MODULE, stop).
 add_player(Nick,Mail,Password) -> gen_server:call(?MODULE,{add_player, Nick,Mail,Password}).
 find_player(Hash) -> gen_server:call(?MODULE,{find_player, Hash}).
 find_player(Nick,Password) -> gen_server:call(?MODULE,{find_player, Nick,Password}).
+login_player(Hash) -> gen_server:call(?MODULE,{login_player, Hash}).
+logout_player(Hash) -> gen_server:call(?MODULE,{logout_player, Hash}).
 delete_player(Nick) -> gen_server:call(?MODULE,{delete_player, Nick}).
 show(player) ->  gen_server:call(?MODULE,{show, player}).
 update_schema() -> gen_server:call(?MODULE,{update_schema}).
@@ -86,14 +90,37 @@ findPlayer(mail,Mail)->
 		[Player] -> Player
 	end.
 
-writePlayer(Nick,Mail,Password,Score) ->
-	Hash=getHash(Nick,Password),
-	Row = #player{hash=Hash, nick=Nick, mail=Mail, score=Score, registered= os:timestamp()},
+writePlayer(Row)->
 	F = fun() ->
 			mnesia:write(Row)
 		end,
 	mnesia:transaction(F),
-	findPlayer(hash,Hash).
+	findPlayer(hash,Row#player.hash).
+
+createPlayer(Nick,Mail,Password,Registered) ->
+	Hash=getHash(Nick,Password),
+	Row = #player{hash=Hash, 
+					nick=Nick, 
+					mail=Mail, 
+					registered=Registered, 
+					score=0, 
+					lastLogin=0, 
+					lastLogout=0,
+					isOnline=0
+				},
+	writePlayer(Row).
+
+loginPlayer(Hash,Login)->
+	case findPlayer(hash,Hash) of
+		not_a_player -> not_a_player;
+		Player -> writePlayer(Player#player{isOnline=1,lastLogin=Login})
+	end.
+
+logoutPlayer(Hash,Logout)->
+	case findPlayer(hash,Hash) of
+		not_a_player -> not_a_player;
+		Player -> writePlayer(Player#player{isOnline=0,lastLogout=Logout})
+	end.
 
 %% internal End --
 
@@ -107,7 +134,7 @@ init([]) ->
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
 	case findPlayer(nick,Nick) of
 		not_a_player -> case findPlayer(mail,Mail) of
-							not_a_player -> {reply, writePlayer(Nick,Mail,Password,0) , Tab};
+							not_a_player -> {reply, createPlayer(Nick,Mail,Password,os:timestamp()) , Tab};
 							_ -> {reply, mail_exists , Tab}
 						end;
 		_ -> {reply, nick_exists , Tab}
@@ -119,6 +146,12 @@ handle_call({find_player,Hash},_From, Tab) ->
 handle_call({find_player,Nick,Password},_From, Tab) ->
 	Hash = getHash(Nick,Password),
 	{reply, findPlayer(hash,Hash), Tab};	
+
+handle_call({login_player,Hash},_From, Tab) ->
+	{reply, loginPlayer(Hash,os:timestamp()), Tab};	
+
+handle_call({logout_player,Hash},_From, Tab) ->
+	{reply, logoutPlayer(Hash,os:timestamp()), Tab};	
 
 handle_call({delete_player,Nick},_From, Tab) ->
 	case findPlayer(nick,Nick) of
