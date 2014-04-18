@@ -19,7 +19,12 @@ formatPlayer(Player) ->
     [{<<"Hash">>,list_to_binary(Player#player.hash)},
     {<<"Nick">>,list_to_binary(Player#player.nick)},
     {<<"Mail">>,list_to_binary(Player#player.mail)},
-    {<<"Score">>,Player#player.score}].
+    {<<"Score">>,Player#player.score},
+    {<<"IsOnline">>,Player#player.isOnline},
+    {<<"Registered">>,Player#player.registered},
+    {<<"LastLogin">>,Player#player.lastLogin},
+    {<<"LastLogout">>,Player#player.lastLogout}
+    ].
 
 %% GET Methods
 get("/players/", _Req, State) ->
@@ -70,12 +75,13 @@ end.
 
 %% PUT Methods
 put("/player/:id", Req, State) ->
+    Hash=leptus_req:param(id, Req),
     case leptus_req:body_qs(Req) of
-        [{<<"Hash">>,Hash,<<"Login">>,<<"1">>}] -> 
-            {200, {json, formatPlayer(yags_database:login_player(Hash))}, State};
-        [{<<"Hash">>,Hash,<<"Logout">>,<<"1">>}] ->
-            {200, {json, formatPlayer(yags_database:logout_player(Hash))}, State};
-         _ -> {403,{json, [{<<"Msg">>,<<"Parameter not matching">>}]}, State}
+        [{<<"Login">>,<<"1">>}] -> 
+            {200, {json, formatPlayer(yags_database:login_player(binary_to_list(Hash)))}, State};
+        [{<<"Logout">>,<<"1">>}] ->
+            {200, {json, formatPlayer(yags_database:logout_player(binary_to_list(Hash)))}, State};
+         _ -> {406,{json, [{<<"Msg">>,<<"Parameter not matching">>}]}, State}
 end.
 
 %% DELETE Methods

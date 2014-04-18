@@ -27,6 +27,7 @@ div#score .opponent{
 .wrapper{
 	margin-left:40px;
 }
+a {font-size: 8pt;}
 
 p.error{color:#F53A2C;width: 200px;font-size:10pt;}
 input.error{background-color: #F5837B}

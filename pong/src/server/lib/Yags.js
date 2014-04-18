@@ -63,14 +63,15 @@ Yags={
   	 * @param  {[type]}   data     post object
   	 * @param  {Function} callback Callback function on success
   	 * @param  {Function} next error handler
+  	 * @param  {Function} method PUT or POST
   	 * @return {Null}            null
   	 */
-  	post:function(route,data,callback,next){
+  	write:function(route,data,callback,next,method){
   		data=querystring.stringify(data); //format parameters to string
   		var options = {
 		
   		path: route,
-  		method: 'POST',
+  		method: method,
 		  headers: {
         	'Content-Type': 'application/x-www-form-urlencoded',
         	'Content-Length': data.length
@@ -79,6 +80,14 @@ Yags={
 		var post_req=this.request(options,callback,next);
 	  	post_req.write(data);
 	  	post_req.end();
+  	},
+
+  	post:function(route,data,callback,next){
+  		Yags.write(route,data,callback,next,"POST");
+  	},
+
+  	put:function(route,data,callback,next){
+  		Yags.write(route,data,callback,next,"PUT");
   	},
 
   	get:function(route,callback,next){

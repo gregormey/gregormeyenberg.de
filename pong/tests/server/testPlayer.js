@@ -4,6 +4,7 @@ var Yags=require("../../src/server/lib/Yags.js");
 
 
 describe('Player', function(){
+  var myPlayer=null;
 
 	it("registers a player and expects 201 response code",function(done){
 		
@@ -38,10 +39,40 @@ describe('Player', function(){
           function(yags,player){
                   assert.equal(yags.statusCode,200);
                   assert.equal(player.Nick,"test100");
+                  myPlayer=player; //save player Object for further use
                   done();
                 }
       );
   });
+
+  it("trys to login an existing player  and expects a valid player Object were isOnline is set",function(done){
+      Yags.put("/player/"+myPlayer.Hash,
+            {Login:1},
+              function(yags,player){
+                  assert.equal(yags.statusCode,200);
+                  assert.equal(player.IsOnline,1);
+                   done();
+                },
+                function(e){
+                  throw e;
+                }
+         );
+  });
+
+  it("trys to logout an existing player  and expects a valid player Object were isOnline is set",function(done){
+       Yags.put("/player/"+myPlayer.Hash,
+              {Logout:1},
+              function(yags,player){
+                  assert.equal(yags.statusCode,200);
+                   assert.equal(player.IsOnline,0);
+                   done();
+                },
+                function(e){
+                  throw e;
+                }
+         );
+  });
+
 
   it("trys to delete an existing player and expects 200 response code",function(done){
       var options = {

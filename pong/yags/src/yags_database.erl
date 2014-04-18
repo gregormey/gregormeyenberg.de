@@ -110,17 +110,22 @@ createPlayer(Nick,Mail,Password,Registered) ->
 				},
 	writePlayer(Row).
 
-loginPlayer(Hash,Login)->
+loginPlayer(Hash,LoginTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
-		Player -> writePlayer(Player#player{isOnline=1,lastLogin=Login})
+		Player -> writePlayer(Player#player{isOnline=1,lastLogin=LoginTS})
 	end.
 
-logoutPlayer(Hash,Logout)->
+logoutPlayer(Hash,LogoutTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
-		Player -> writePlayer(Player#player{isOnline=0,lastLogout=Logout})
+		Player -> writePlayer(Player#player{isOnline=0,lastLogout=LogoutTS})
 	end.
+
+unixTS()->
+	{Mega, Secs, _} = os:timestamp(),
+	Mega*1000000 + Secs.
+
 
 %% internal End --
 
@@ -134,7 +139,7 @@ init([]) ->
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
 	case findPlayer(nick,Nick) of
 		not_a_player -> case findPlayer(mail,Mail) of
-							not_a_player -> {reply, createPlayer(Nick,Mail,Password,os:timestamp()) , Tab};
+							not_a_player -> {reply, createPlayer(Nick,Mail,Password,unixTS()) , Tab};
 							_ -> {reply, mail_exists , Tab}
 						end;
 		_ -> {reply, nick_exists , Tab}
@@ -148,10 +153,10 @@ handle_call({find_player,Nick,Password},_From, Tab) ->
 	{reply, findPlayer(hash,Hash), Tab};	
 
 handle_call({login_player,Hash},_From, Tab) ->
-	{reply, loginPlayer(Hash,os:timestamp()), Tab};	
+	{reply, loginPlayer(Hash,unixTS()), Tab};	
 
 handle_call({logout_player,Hash},_From, Tab) ->
-	{reply, logoutPlayer(Hash,os:timestamp()), Tab};	
+	{reply, logoutPlayer(Hash,unixTS()), Tab};	
 
 handle_call({delete_player,Nick},_From, Tab) ->
 	case findPlayer(nick,Nick) of

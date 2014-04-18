@@ -122,12 +122,31 @@ var Player={
                       function(yags,myPlayer){
                           if(myPlayer.Hash){
                             req.session.myPlayer=myPlayer;
+                             Yags.put("/player/"+req.session.myPlayer.Hash,
+                                {Login:1},
+                                function(yags,player){
+                                  req.session.myPlayer=player;
+                                },
+                                next
+                              );
                             res.redirect("/play");
                           }else{
                             Player.renderErr(res,req,TextCatalog.loginFail,"","login"); 
                           }
                       }
                     );
+    },
+
+    logout:function(req, res, next){
+      callback=function(){
+        delete req.session.myPlayer;
+      }
+      Yags.put("/player/"+req.session.myPlayer.Hash,
+        {Logout:1},
+        callback,
+        callback //do a logout even in a error case
+      );
+       res.redirect("/login");
     },
 
     /**
@@ -152,4 +171,5 @@ var Player={
 //public routs
 exports.add = Player.add;
 exports.login = Player.login;
+exports.logout = Player.logout;
 exports.startGame = Player.startGame;

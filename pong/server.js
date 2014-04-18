@@ -47,6 +47,8 @@ app.get('/login', function(req, res){
   	});
 });
 
+
+
 app.get('/register', function(req, res){
 	res.render('register', {
     	title: 'Create Pong Account'
@@ -55,6 +57,7 @@ app.get('/register', function(req, res){
 
 app.post('/register', player.add);
 app.post('/login', player.login);
+app.get('/logout', player.logout);
 
 app.get('/play', player.startGame);
 

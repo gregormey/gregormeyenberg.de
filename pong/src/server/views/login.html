@@ -5,7 +5,9 @@
 		<form method="post" action="/login" >
 			<p><input type="test" name="Nick" placeholder='Nick' value='{{ Nick }}' {% if errorField == "nick" %} class="error"{% endif %}/></p>
 			<p><input type="password" name="Password" placeholder='password' value='{{ Password }}' {% if errorField == "password" %} class="error"{% endif %}/></p>
-			<p><input type="submit"  value="enter" /></p>
+			<p><input type="submit"  value="enter" />
+				<a href="/register">Create an Account.</a>
+			</p>
 		</form>
 	</div>
 	<div class='cloumn'>
