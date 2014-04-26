@@ -10,7 +10,7 @@ describe('Player', function(){
 		
 		Yags.post("/player/new",
             {Nick:"test100",
-              Mail:"test100",
+              Mail:"test@test.de",
               Password:"test100"},
               function(yags){
                 	assert.equal(yags.statusCode,201);
@@ -19,18 +19,36 @@ describe('Player', function(){
          );
 	});
 
-	it("trys to create an existing player and expects 409 response code",function(done){
+	it("trys to create an existing player and expects 406 response code",function(done){
 		
 		Yags.post("/player/new",
             {Nick:"test100",
-              Mail:"test100",
+              Mail:"test@test.de",
               Password:"test100"},
               function(yags){
-                assert.equal(yags.statusCode,409);
+                assert.equal(yags.statusCode,406);
 					       done();
               	}
          );
 	});
+
+  it("trys to create an player with an invalid mail and expects 406 response code and the body message 'Mail not valid' ",
+
+    function(done){    
+        Yags.post("/player/new",
+            {Nick:"test100",
+              Mail:"test100",
+              Password:"test100"},
+              function(yags,response){
+                assert.equal(yags.statusCode,406);
+                assert.equal(response.Msg, "Mail not valid");
+                done();
+                },
+                function(e){
+                  throw e;
+                }
+         );
+  });
 
   
 

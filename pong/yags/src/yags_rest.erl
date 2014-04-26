@@ -53,8 +53,11 @@ post("/player/new", Req, State)->
 	case yags_database:add_player(binary_to_list(Nick),
                                 binary_to_list(Mail),
                                 binary_to_list(Password)) of 
-            nick_exists->{409, {json,[{<<"Msg">>,<<"Nick exists">>}]},State};
-            mail_exists->{409, {json,[{<<"Msg">>,<<"Mail exists">>}]},State};
+            nick_exists->{406, {json,[{<<"Msg">>,<<"Nick exists">>}]},State};
+            mail_exists->{406, {json,[{<<"Msg">>,<<"Mail exists">>}]},State};
+            mail_not_valid->{406, {json,[{<<"Msg">>,<<"Mail not valid">>}]},State};
+            password_not_valid->{406, {json,[{<<"Msg">>,<<"Password not valid">>}]},State};
+            nick_not_valid->{406, {json,[{<<"Msg">>,<<"Nick not valid">>}]},State};
             NewPlayer->{201, [{<<"Location">>, 
                                 list_to_binary("/player/"++NewPlayer#player.hash)}], 
                                 {json, [{<<"Msg">>,<<"Player created">>}]}, 
