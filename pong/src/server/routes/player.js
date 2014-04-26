@@ -41,7 +41,7 @@ var Player={
             Password:req.body.Password},
             function(yags,body){
                 if(yags.statusCode==201){
-                  res.redirect("/play");
+                  Player.login(req, res, next);
                 }else if(yags.statusCode==406){
                   // player already exits
                   var msg="";
