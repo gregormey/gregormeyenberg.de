@@ -33,7 +33,6 @@ describe('Player', function(){
 	});
 
   it("trys to create an player with an invalid mail and expects 406 response code and the body message 'Mail not valid' ",
-
     function(done){    
         Yags.post("/player/new",
             {Nick:"test100",
@@ -42,6 +41,40 @@ describe('Player', function(){
               function(yags,response){
                 assert.equal(yags.statusCode,406);
                 assert.equal(response.Msg, "Mail not valid");
+                done();
+                },
+                function(e){
+                  throw e;
+                }
+         );
+  });
+
+  it("trys to create an player with an invalid nick and expects 406 response code and the body message 'Nick not valid' ",
+    function(done){    
+        Yags.post("/player/new",
+            {Nick:"te",
+              Mail:"test@test.de",
+              Password:"test100"},
+              function(yags,response){
+                assert.equal(yags.statusCode,406);
+                assert.equal(response.Msg, "Nick not valid");
+                done();
+                },
+                function(e){
+                  throw e;
+                }
+         );
+  });
+
+  it("trys to create an player with an invalid password and expects 406 response code and the body message 'Password not valid' ",
+    function(done){    
+        Yags.post("/player/new",
+            {Nick:"test",
+              Mail:"test@test.de",
+              Password:"test"},
+              function(yags,response){
+                assert.equal(yags.statusCode,406);
+                assert.equal(response.Msg, "Password not valid");
                 done();
                 },
                 function(e){

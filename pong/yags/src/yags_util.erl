@@ -16,13 +16,13 @@ validate(email,Sting)->
 	end;
 
 validate(password,String)->
-	case string:len(String) > 6 of
+	case string:len(String) > 3 of
 		true -> valid;
 		false -> not_valid
 	end;
 
 validate(nick,String)->
-	case string:len(String) > 3 of
+	case string:len(String) > 2 of
 		true -> valid;
 		false -> not_valid
 	end.
