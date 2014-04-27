@@ -2,7 +2,7 @@ var Yags=require("../lib/Yags.js")
 var TextCatalog=require("../lib/TextCatalog.js");
 
 /**
- * [Player description]
+ * Handels player Routes
  * @type {Object}
  */
 var Player={
@@ -10,11 +10,11 @@ var Player={
   /**
    * Returns render Object in case if an error occures during 
    * registartion
-   * @param  {[type]} res       [description]
-   * @param  {[type]} req       [description]
-   * @param  {[type]} msg       [description]
-   * @param  {[type]} erroField [description]
-   * @return {[type]}           [description]
+   * @param  {Object} res       response Object
+   * @param  {Object} req       request Obkect
+   * @param  {String} msg       User Message
+   * @param  {String} erroField  Css class of field that raises the error
+   * @return {null}           
    */
   renderErr:function(res,req,msg,errorField,template){
     res.render(template, {
@@ -27,12 +27,42 @@ var Player={
     });
   },
 
+   /**
+    * In relation to the response message differend user messages are rendered
+    * @param  {Object} res  response Object
+    * @param  {Object} req  request Object
+    * @param  {Object} body YAGS response Object
+    * @return {null}      
+    */
+  renderInvalidRegistration:function(res,req,body){
+    var msg="";
+      var errorField=false;
+      if(body.Msg=="Mail exists"){
+          msg=TextCatalog.mailExists;
+          errorField = "mail";
+      }else if(body.Msg=="Nick exists"){
+          msg=TextCatalog.nickExists;
+          errorField = "nick";
+      }else if(body.Msg=="Mail not valid"){
+          msg=TextCatalog.invalidMail;
+          errorField = "mail";
+      }else if(body.Msg=="Nick not valid"){
+          msg=TextCatalog.invalidNick;
+          errorField = "nick";
+      }else if(body.Msg=="Password not valid"){
+          msg=TextCatalog.invalidPassword;
+          errorField = "password";
+      }
+
+      Player.renderErr(res,req,msg,errorField,'register');  
+  }
+
 /**
- * Register a player
- * @param  {[type]}   req  [description]
- * @param  {[type]}   res  [description]
- * @param  {Function} next [description]
- * @return {[type]}        [description]
+ * Route callback to register a  new player
+ * @param  {Object}   req  Request Object
+ * @param  {Object}   res  Response Object
+ * @param  {Function} next  call back to throw exceptions
+ * @return {null}        
  */
   add:function(req, res, next){
     Yags.post("/player/new",
@@ -40,30 +70,11 @@ var Player={
             Mail:req.body.Mail,
             Password:req.body.Password},
             function(yags,body){
-                if(yags.statusCode==201){
+                if(yags.statusCode==201){ // Add new Player was successfull 
                   Player.login(req, res, next);
                 }else if(yags.statusCode==406){
-                  // player already exits
-                  var msg="";
-                  var errorField=false;
-                  if(body.Msg=="Mail exists"){
-                      msg=TextCatalog.mailExists;
-                      errorField = "mail";
-                  }else if(body.Msg=="Nick exists"){
-                      msg=TextCatalog.nickExists;
-                      errorField = "nick";
-                  }else if(body.Msg=="Mail not valid"){
-                      msg=TextCatalog.invalidMail;
-                      errorField = "mail";
-                  }else if(body.Msg=="Nick not valid"){
-                      msg=TextCatalog.invalidNick;
-                      errorField = "nick";
-                  }else if(body.Msg=="Password not valid"){
-                      msg=TextCatalog.invalidPassword;
-                      errorField = "password";
-                  }
-
-                  Player.renderErr(res,req,msg,errorField,'register');                   
+                  //Some input is invalid
+                    Player.renderInvalidRegistration(res, req, body);
                 }else{
                   next(new Error('Error while registration.'));
                 }
@@ -74,21 +85,21 @@ var Player={
     },
 
     /**
-     * Player Login
-     * @param  {[type]}   req  [description]
-     * @param  {[type]}   res  [description]
-     * @param  {Function} next [description]
-     * @return {[type]}        [description]
+     * Route callback to login a Player
+     * @param  {[type]}   req  Request Object
+     * @param  {[type]}   res  Response Object
+     * @param  {Function} next call back to throw exceptions
+     * @return {null}     
      */
     login:function(req, res, next){
          Yags.get("/player/"+req.body.Nick+"?pwd="+req.body.Password,
                       function(yags,myPlayer){
-                          if(myPlayer.Hash){
+                          if(myPlayer.Hash){ // if response has a Player Hash Player will be logged in
                             req.session.myPlayer=myPlayer;
                              Yags.put("/player/"+req.session.myPlayer.Hash,
                                 {Login:1},
                                 function(yags,player){
-                                  req.session.myPlayer=player;
+                                  req.session.myPlayer=player; //add Player Object to session
                                 },
                                 next
                               );
@@ -100,6 +111,14 @@ var Player={
                     );
     },
 
+    /**
+      * Route callback to logout a Player. 
+      * Removes player Object from Session.
+     * @param  {Object}   req  Request Object
+     * @param  {Object}   res  Response Object
+     * @param  {Function} next Callback to throw exception
+     * @return {null}        
+     */
     logout:function(req, res, next){
       callback=function(){
         delete req.session.myPlayer;
@@ -113,11 +132,11 @@ var Player={
     },
 
     /**
-     * start a game
-     * @param  {[type]}   req  [description]
-     * @param  {[type]}   res  [description]
-     * @param  {Function} next [description]
-     * @return {[type]}        [description]
+     * Route callback to start a game
+     * @param  {Object}   req  Request Object
+     * @param  {Object}   res  Response Object
+     * @param  {Function} next Callback to throw exception
+     * @return {null}       
      */
     startGame:function(req, res, next){
         if(req.session.myPlayer){

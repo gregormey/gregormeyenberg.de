@@ -9,7 +9,7 @@ module.exports = function(grunt) {
          options: {
           reporter: 'spec'
         },
-        src: ['tests/client/testBall.js','tests/client/testPlayer.js']
+        src: ['tests/client/testBall.js','tests/client/testPlayer.js','tests/server/testPlayer.js']
       }
     },
     uglify: {

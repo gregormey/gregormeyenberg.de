@@ -2,12 +2,12 @@ var http=require("http");
 var querystring = require('querystring');
 
 /**
- * Provide an interface to tags for node.js
+ * REST API wrapper for YAGS 
  * @type {Object}
  */
 Yags={
 	/**
-	 * ygas host IP or DNS
+	 * YAGS host IP or DNS
 	 * @type {String}
 	 */
 	host: "127.0.0.1",
@@ -19,15 +19,15 @@ Yags={
 
 
   	/**
-  	 * [request description]
-  	 * @param  {[type]}   options  [description]
-  	 * @param  {Function} callback [description]
-  	 * @param  {Function} next     [description]
-  	 * @return {[type]}            [description]
+  	 * Does a request to YAGS
+  	 * @param  {Objectt}   Request options (Route, Header, Method, Body data)  
+  	 * @param  {Function} callback  will be called in case of a successfull request with the response object
+  	 * @param  {Function} next      will be called in case of a not successful request
+  	 * @return {null}           
   	 */
   	request:function(options,callback,next){
 
-  		//add host and port
+  		//add host and port to options
   		options.host = this.host;  		
   		options.port =this.port;
 
@@ -50,7 +50,7 @@ Yags={
 
 
 		});
-
+      // Request error
 	  	req.on('error', function(e) {
 	             next(new Error('Error while YAGS request.'));
 	     });
@@ -58,9 +58,10 @@ Yags={
   	},
 
   	/**
-  	 * [post description]
+  	 * Does a request with body parameters.
+     * Used for PUT or POST requests 
   	 * @param  {Stirng}   route    route to call
-  	 * @param  {[type]}   data     post object
+  	 * @param  {[type]}   data     post data object
   	 * @param  {Function} callback Callback function on success
   	 * @param  {Function} next error handler
   	 * @param  {Function} method PUT or POST
@@ -82,14 +83,37 @@ Yags={
 	  	post_req.end();
   	},
 
+    /**
+     * Does a POST call to yags
+     * @param  {Stirng}   route    route to call
+     * @param  {[type]}   data     post data object
+     * @param  {Function} callback Callback function on success
+     * @param  {Function} next error handler
+     * @return {null}           
+     */
   	post:function(route,data,callback,next){
   		Yags.write(route,data,callback,next,"POST");
   	},
 
+    /**
+     * Does a PUT call to yags
+     * @param  {Stirng}   route    route to call
+     * @param  {[type]}   data     post data object
+     * @param  {Function} callback Callback function on success
+     * @param  {Function} next error handler
+     * @return {null}           
+     */
   	put:function(route,data,callback,next){
   		Yags.write(route,data,callback,next,"PUT");
   	},
 
+    /**
+     * Does a GET call to yags
+     * @param  {Stirng}   route    route to call
+     * @param  {Function} callback Callback function on success
+     * @param  {Function} next error handler
+     * @return {null}  
+     */
   	get:function(route,callback,next){
   		var options = {
   		path: route,
@@ -104,5 +128,5 @@ Yags={
 };
 
 
-
+// Export for require
 module.exports=Yags;
