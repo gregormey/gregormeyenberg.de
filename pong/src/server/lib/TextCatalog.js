@@ -12,5 +12,5 @@ TextCatalog={
     loginFail:"Wrong Password or Nick Name",
     playgroundTitle:"Play Pong!"
 }
-
+// Export for require
 module.exports=TextCatalog;
