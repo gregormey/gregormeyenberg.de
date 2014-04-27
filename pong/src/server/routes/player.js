@@ -147,7 +147,43 @@ var Player={
         }else{
           res.redirect("/login");
         }
-    }
+    },
+
+    /**
+     * Index route. Redirects to play or login if no player object is set 
+      * @param  {Object}   req  Request Object
+     * @param  {Object}   res  Response Object
+     * @return {[type]}     [description]
+     */
+    index:function(req, res){
+    if(req.session.myPlayer){
+      res.redirect('/play');
+    }else{
+      res.redirect('/login');
+    },
+
+    /**
+     * Route to get login form
+      * @param  {Object}   req  Request Object
+     * @param  {Object}   res  Response Object
+     * @return {[type]}     [description]
+     */
+    login_form:function(req, res){
+        res.render('login', {
+        title: 'Pong Login'
+    });
+
+     /**
+     * Route to get registration form
+      * @param  {Object}   req  Request Object
+     * @param  {Object}   res  Response Object
+     * @return {[type]}     [description]
+     */
+    resitration_form:function(req, res){
+      res.render('register', {
+      title: 'Create Pong Account'
+    });
+
 }
 
 //public routs
@@ -155,3 +191,7 @@ exports.add = Player.add;
 exports.login = Player.login;
 exports.logout = Player.logout;
 exports.startGame = Player.startGame;
+exports.index=Player.index;
+exports.login_form=Player.login_form;
+exports.resitration_form=Player.resitration_form;
+

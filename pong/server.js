@@ -33,33 +33,21 @@ if(process.argv[2]=='-dev'){
   swig.setDefaults({ cache: false });
 }
 
-app.get('/', function(req, res){
-	  if(req.session.myPlayer){
-      res.redirect('/play');
-    }else{
-      res.redirect('/login');
-    }
-});
 
-app.get('/login', function(req, res){
-	res.render('login', {
-    	title: 'Pong Login'
-  	});
-});
-
-
-
-app.get('/register', function(req, res){
-	res.render('register', {
-    	title: 'Create Pong Account'
-  	});
-});
-
+/**
+ * route configuration
+ */
+app.get('/', player.index});
+app.get('/login', player.login_form});
+app.get('/register', player.registration_form});
 app.post('/register', player.add);
 app.post('/login', player.login);
 app.get('/logout', player.logout);
-
 app.get('/play', player.startGame);
 
+
+/**
+ * Start server
+ */
 app.listen(80);
 console.log('Pong Frontend Server listening port 80');
