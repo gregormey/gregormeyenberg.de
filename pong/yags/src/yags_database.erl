@@ -12,7 +12,7 @@
 -export([terminate/2]).
 -export([code_change/3]).
 
-
+%% interfaces to database
 -export([install/0]).
 -export([start/0]).
 -export([start_link/0]).
@@ -65,10 +65,13 @@ do(Q) ->
 setDataPath() ->
 	application:set_env(mnesia, dir, "yags/data").
 
+%% creates a salted sha256 hash with a salt strung from the security section of
+%% yags.config
 getHash(Nick,Password)->
 	Salt =yags_config:get_value(config,[security,salt], <<"soooosecure">>),
 	hmac:hexlify(hmac:hmac256(Salt,list_to_binary(Nick ++ Password))).
 
+%% find single player from database
 findPlayer(hash,Hash)->
 	case do(qlc:q([X || X <- mnesia:table(player), 
 							X#player.hash == Hash]))  of
@@ -90,6 +93,7 @@ findPlayer(mail,Mail)->
 		[Player] -> Player
 	end.
 
+%% Update a player by given row
 writePlayer(Row)->
 	F = fun() ->
 			mnesia:write(Row)
@@ -110,6 +114,7 @@ createPlayer(Nick,Mail,Password,Registered) ->
 				},
 	writePlayer(Row).
 
+%% wrapper to login a player. Sets isOnline=1 and timestamp for lastlogin
 loginPlayer(Hash,LoginTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;

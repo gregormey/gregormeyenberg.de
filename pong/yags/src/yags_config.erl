@@ -24,7 +24,8 @@ priv_dir(App) ->
         PrivDir ->
             PrivDir
     end.
-    
+
+%% loads fun for database update from yags.update  
 get_fun(update,Keys,Default) ->
 	Value=get_value(update,Keys,Default),
 	{ok, Ts, _} = erl_scan:string(Value),
@@ -32,14 +33,17 @@ get_fun(update,Keys,Default) ->
   	{value, Fun, _} = erl_eval:exprs(Exprs, []),
   	Fun.
 
+%% loads a value from yags.config
 get_value(config,Keys,Default) ->
 	Config=config_file(yags,"yags.config"),
 	get_value(Keys,Config,Default);
 
+%% loads a value from yags.update
 get_value(update,Keys,Default) ->
 	Config=config_file(yags,"yags.update"),
 	get_value(Keys,Config,Default);
-    
+
+ %% recrusive search for value in a config set   
  get_value([Key|Keys],Opts,Default) ->
     case lists:keyfind(Key, 1, Opts) of
         {_, V} -> get_value(Keys,V,Default);
