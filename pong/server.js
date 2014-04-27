@@ -37,9 +37,9 @@ if(process.argv[2]=='-dev'){
 /**
  * route configuration
  */
-app.get('/', player.index});
-app.get('/login', player.login_form});
-app.get('/register', player.registration_form});
+app.get('/', player.index);
+app.get('/login', player.login_form);
+app.get('/register', player.registration_form);
 app.post('/register', player.add);
 app.post('/login', player.login);
 app.get('/logout', player.logout);
