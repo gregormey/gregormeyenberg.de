@@ -5,28 +5,31 @@
 -export([validate/2]).
 -export([validate/3]).
 
+%% generates a POSIX timestamp
 unixTS()->
 	{Mega, Secs, _} = os:timestamp(),
 	Mega*1000000 + Secs.
 
+%% validates a email
+%% standard HTML5 secified regex is used
 validate(email,Sting)->
 	case re:run(Sting, "\\b[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*\\b") of
 		nomatch -> not_valid;
 		{match,_} -> valid
 	end;
-
+%% password needs to have more the 3 characters
 validate(password,String)->
 	case string:len(String) > 3 of
 		true -> valid;
 		false -> not_valid
 	end;
-
+%% nick needs to have more the 2 characters
 validate(nick,String)->
 	case string:len(String) > 2 of
 		true -> valid;
 		false -> not_valid
 	end.
-
+%% wrapper to validate input for account creation
 validate(Nick,Password, Mail) ->
 	case {validate(nick,Nick),validate(password,Password),validate(email,Mail)} of
 		{valid,valid,valid} -> valid;

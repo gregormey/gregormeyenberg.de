@@ -121,6 +121,7 @@ loginPlayer(Hash,LoginTS)->
 		Player -> writePlayer(Player#player{isOnline=1,lastLogin=LoginTS})
 	end.
 
+%% wrapper to logout a player. Sets isOnline=0 and timestamp for lastlogout
 logoutPlayer(Hash,LogoutTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
@@ -137,6 +138,8 @@ init([]) ->
 	mnesia:wait_for_tables([player],20000),
     {ok, ?MODULE}.
 
+%% call handler to add a player
+%% before adding the player it checks if Input is valid and if nick and mail not already exists
 handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
 	case yags_util:validate(Nick, Password, Mail) of 
 		valid ->
@@ -150,9 +153,11 @@ handle_call({add_player, Nick,Mail,Password}, _From, Tab) ->
 		Validation -> 	{reply, Validation , Tab}
 	end;
 
+%% find player by hash
 handle_call({find_player,Hash},_From, Tab) ->
 	{reply, findPlayer(hash,Hash), Tab};	
 
+%% find player by hash and password
 handle_call({find_player,Nick,Password},_From, Tab) ->
 	Hash = getHash(Nick,Password),
 	{reply, findPlayer(hash,Hash), Tab};	
@@ -171,11 +176,12 @@ handle_call({delete_player,Nick},_From, Tab) ->
 					),
 				{reply, Val, Tab}
 	end;
-		
+%% list all players
 handle_call({show, player}, _From, Tab) ->
 	Reply =do(qlc:q([X || X <- mnesia:table(player)])),
 	{reply, Reply, Tab};
 
+%% call to update database schema. loads update FUN from yags.update
 handle_call({update_schema},_From, Tab) ->
 	Fun=yags_config:get_fun(update,[update,schema], "fun(X)->X end."),
 	{reply, mnesia:transform_table(player, 

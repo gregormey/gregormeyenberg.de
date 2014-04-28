@@ -15,6 +15,7 @@ init(_Route, _Req, State) ->
     {ok, State}.
 
 %%internal
+%% converts player record to tuble that can be converted to json
 formatPlayer(Player) ->
     [{<<"Hash">>,list_to_binary(Player#player.hash)},
     {<<"Nick">>,list_to_binary(Player#player.nick)},
@@ -27,12 +28,15 @@ formatPlayer(Player) ->
     ].
 
 %% GET Methods
+%% Shows all stored players
 get("/players/", _Req, State) ->
     Status = 200,
     Players= [formatPlayer(Player)|| 
     			Player <- yags_database:show(player)],
     {Status, {json, Players}, State};
 
+%%finds a single player either by hash or by Nick and password with the GET parameter 
+%%Example by Password /player/test?pwd=test  
 get("/player/:id", Req, State) ->
     case leptus_req:qs_val(<<"pwd">>, Req) of
         undefined -> Hash=leptus_req:param(id, Req),
@@ -48,6 +52,8 @@ get("/player/:id", Req, State) ->
     end.
 
 %% POST  Methods
+%% Creates a new player account requierd fields are Nick, Mail, Password
+%% Check if Nick or Password exits and if input has a valid format
 post("/player/new", Req, State)->
 	[{<<"Nick">>,Nick},{<<"Mail">>,Mail},{<<"Password">>,Password}]=leptus_req:body_qs(Req),
 	case yags_database:add_player(binary_to_list(Nick),
@@ -64,7 +70,7 @@ post("/player/new", Req, State)->
                         State}
     end;
 
-
+%% server commands
 post("/server/:command", Req, State)->
     case leptus_req:param(command, Req) of
            <<"stop">> -> 
@@ -77,6 +83,7 @@ post("/server/:command", Req, State)->
 end. 
 
 %% PUT Methods
+%% Update of a player account, used for login and logout of a player
 put("/player/:id", Req, State) ->
     Hash=leptus_req:param(id, Req),
     case leptus_req:body_qs(Req) of
@@ -88,7 +95,7 @@ put("/player/:id", Req, State) ->
 end.
 
 %% DELETE Methods
-
+%% Delets a player by Nick
 delete("/player/:id", Req, State)->
     Nick=leptus_req:param(id, Req),
     case yags_database:delete_player(binary_to_list(Nick)) of
