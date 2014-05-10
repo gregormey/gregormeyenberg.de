@@ -14,6 +14,7 @@
 
 %% interfaces to database
 -export([install/0]).
+-export([install/1]).
 -export([start/0]).
 -export([start_link/0]).
 -export([stop/0]).
@@ -36,6 +37,14 @@
 
 %% interfaces
 install() ->
+	yags:set_dbPath(), 
+	create_tables().
+
+%% set up schema for test enviroment
+install(test) ->
+	create_tables().
+
+create_tables()->
 	%% delete schema in case another schema is running on this node
 	ok=mnesia:delete_schema([node()]),
 	ok=mnesia:create_schema([node()]),
@@ -62,6 +71,7 @@ do(Q) ->
 	F = fun() -> qlc:e(Q) end,
 	{atomic, Val} = mnesia:transaction(F),
 	Val. 
+
 
 %% creates a salted sha256 hash with a salt strung from the security section of
 %% yags.config

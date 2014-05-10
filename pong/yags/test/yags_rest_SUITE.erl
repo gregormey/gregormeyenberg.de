@@ -12,7 +12,7 @@
 -import(helpers, [request/2, request/3, request/4, response_body/1]).
 
 init_per_suite(Config) ->
-    stopped = yags_database:install(),  
+    stopped = yags_database:install(test),  
     Priv = ?config(priv_dir, Config),
     ok = yags:start_server(test),
     Config.

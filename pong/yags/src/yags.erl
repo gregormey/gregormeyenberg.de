@@ -5,6 +5,7 @@
 -export([start_server/0]).
 -export([stop_server/0]).
 -export([restart_server/0]).
+-export([set_dbPath/0]).
 
 -spec start_server() -> {ok, pid()} | {error, any()}.
 
@@ -14,8 +15,12 @@ start_server(test) ->
 
 %starts yags and dependencie services and database in priv dir
 start_server() ->
-	application:set_env(mnesia, dir, filename:join(code:priv_dir(yags), "data")),
+	set_dbPath(),
 	start_applications().
+
+%sets mnesia dir
+set_dbPath()->
+	application:set_env(mnesia, dir, filename:join(code:priv_dir(yags), "data")).
 
 %starts all required OTP applications
 start_applications() ->
