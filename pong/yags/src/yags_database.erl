@@ -36,11 +36,12 @@
 
 %% interfaces
 install() ->
-	setDataPath(),
-	mnesia:create_schema([node()]),
-	mnesia:start(),
-	mnesia:create_table(player,[{attributes,record_info(fields,player)},{disc_copies,[node()]}]),
-	mnesia:stop().
+	%% delete schema in case another schema is running on this node
+	ok=mnesia:delete_schema([node()]),
+	ok=mnesia:create_schema([node()]),
+	ok=mnesia:start(), 
+	{atomic,ok}=mnesia:create_table(player,[{attributes,record_info(fields,player)},{disc_copies,[node()]}]),
+	mnesia:stop(). 
 
 
 start()-> gen_server:start_link({local,?MODULE},?MODULE,[], []).
@@ -61,9 +62,6 @@ do(Q) ->
 	F = fun() -> qlc:e(Q) end,
 	{atomic, Val} = mnesia:transaction(F),
 	Val. 
-
-setDataPath() ->
-	application:set_env(mnesia, dir, "yags/data").
 
 %% creates a salted sha256 hash with a salt strung from the security section of
 %% yags.config
@@ -133,7 +131,6 @@ logoutPlayer(Hash,LogoutTS)->
 
 %% gen_server
 init([]) ->
-    setDataPath(),
 	mnesia:start(),
 	mnesia:wait_for_tables([player],20000),
     {ok, ?MODULE}.
