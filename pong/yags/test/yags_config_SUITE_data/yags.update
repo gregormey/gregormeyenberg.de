@@ -1,0 +1,7 @@
+{update,
+ 		[{schema,
+ 			"fun(Row)->
+ 							Row
+ 						end."
+		}]
+}.

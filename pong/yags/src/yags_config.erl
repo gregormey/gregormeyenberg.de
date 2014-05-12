@@ -3,6 +3,7 @@
 
 -export([get_value/3]).
 -export([get_fun/3]).
+-export([eval_fun/1]).
 
 
 
@@ -27,7 +28,10 @@ priv_dir(App) ->
 
 %% loads fun for database update from yags.update  
 get_fun(update,Keys,Default) ->
-	Value=get_value(update,Keys,Default),
+	eval_fun(get_value(update,Keys,Default)).
+
+%% eval function string
+eval_fun(Value) ->
 	{ok, Ts, _} = erl_scan:string(Value),
   	{ok, Exprs} = erl_parse:parse_exprs(Ts),
   	{value, Fun, _} = erl_eval:exprs(Exprs, []),
