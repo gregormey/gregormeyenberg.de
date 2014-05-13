@@ -8,6 +8,7 @@
 
 
 %% read priv/yags.config file
+-spec config_file(yags, File::string()) -> tuple()| {error, any()}.
 config_file(App,File) ->
     case file:consult(filename:join([priv_dir(App), File])) of
         {ok, Terms} ->
@@ -17,6 +18,7 @@ config_file(App,File) ->
     end.
 
 %% find the path to the priv directory in an application
+-spec priv_dir(yags) -> string().
 priv_dir(App) ->
     case code:priv_dir(App) of
         {error, bad_name} ->
@@ -27,10 +29,12 @@ priv_dir(App) ->
     end.
 
 %% loads fun for database update from yags.update  
+-spec get_fun(update, Keys::list(),Default::any())-> fun().
 get_fun(update,Keys,Default) ->
 	eval_fun(get_value(update,Keys,Default)).
 
 %% eval function string
+-spec eval_fun(Value::string())-> fun().
 eval_fun(Value) ->
 	{ok, Ts, _} = erl_scan:string(Value),
   	{ok, Exprs} = erl_parse:parse_exprs(Ts),
@@ -38,6 +42,7 @@ eval_fun(Value) ->
   	Fun.
 
 %% loads a value from yags.config
+-spec get_value(config|update|list(),list()|tuple(),any())-> any().
 get_value(config,Keys,Default) ->
 	Config=config_file(yags,"yags.config"),
 	get_value(Keys,Config,Default);
@@ -47,7 +52,7 @@ get_value(update,Keys,Default) ->
 	Config=config_file(yags,"yags.update"),
 	get_value(Keys,Config,Default);
 
- %% recrusive search for value in a config set   
+ %% recrusive search for value in a config set 
  get_value([Key|Keys],Opts,Default) ->
     case lists:keyfind(Key, 1, Opts) of
         {_, V} -> get_value(Keys,V,Default);

@@ -7,22 +7,24 @@
 -export([restart_server/0]).
 -export([set_dbPath/0]).
 
--spec start_server() -> {ok, pid()} | {error, any()}.
-
 %starts yags and dependencie services with a path to database
+-spec start_server(test) -> ok.
 start_server(test) ->
 	start_applications().
 
 %starts yags and dependencie services and database in priv dir
+-spec start_server() -> ok.
 start_server() ->
 	set_dbPath(),
 	start_applications().
 
 %sets mnesia dir
+-spec set_dbPath() -> ok.
 set_dbPath()->
 	application:set_env(mnesia, dir, filename:join(code:priv_dir(yags), "data")).
 
 %starts all required OTP applications
+-spec start_applications() -> ok.
 start_applications() ->
 	application:start(crypto),
 	application:start(ranch),
@@ -32,11 +34,12 @@ start_applications() ->
 	leptus:start_http(yags),
 	ok.
 
--spec stop_server() -> ok | {error, not_found}.
+-spec stop_server() -> ok.
 stop_server() ->
     init:stop(),
     ok.
 
+-spec restart_server() -> ok.
  restart_server() ->
  	init:restart(),
  	ok.
