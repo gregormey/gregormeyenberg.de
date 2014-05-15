@@ -27,23 +27,27 @@
 -export([show/1]).
 -export([update_schema/0]).
 
-
-
 -include_lib("stdlib/include/qlc.hrl").
-
-
 -include("yags_database.hrl").
+
+-type not_valid() :: mail_exists | nick_exists | password_not_valid | mail_not_valid.
+-type player() :: #player {}.
+
+
 
 
 %% interfaces
+-spec install() -> 'stopped' | {'error',_}.
 install() ->
 	yags:set_dbPath(), 
 	create_tables().
 
 %% set up schema for test enviroment
-install(test) ->
+-spec install(test) -> 'stopped' | {'error',_}.
+install(test)->
 	create_tables().
 
+-spec create_tables() -> 'stopped' | {'error',_}.
 create_tables()->
 	%% delete schema in case another schema is running on this node
 	ok=mnesia:delete_schema([node()]),
@@ -52,18 +56,37 @@ create_tables()->
 	{atomic,ok}=mnesia:create_table(player,[{attributes,record_info(fields,player)},{disc_copies,[node()]}]),
 	mnesia:stop(). 
 
-
+-spec start() -> {ok, pid()} | {error, any()}.
 start()-> gen_server:start_link({local,?MODULE},?MODULE,[], []).
+
+-spec start_link() -> {ok, pid()} | {error, any()}.
 start_link() -> gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+
+-spec stop() -> ok.
 stop()-> gen_server:call(?MODULE, stop).
 
+-spec add_player(Nick::string(),Mail::string(),Passwor::string()) -> not_valid() | player().
 add_player(Nick,Mail,Password) -> gen_server:call(?MODULE,{add_player, Nick,Mail,Password}).
+
+-spec find_player(Hash::string()) -> player() |  not_a_player.
 find_player(Hash) -> gen_server:call(?MODULE,{find_player, Hash}).
+
+-spec find_player(Nick::string(),Password::string()) -> player() |  not_a_player.
 find_player(Nick,Password) -> gen_server:call(?MODULE,{find_player, Nick,Password}).
+
+-spec login_player(Hash::string()) ->  player() |  not_a_player.
 login_player(Hash) -> gen_server:call(?MODULE,{login_player, Hash}).
+
+-spec logout_player(Hash::string()) ->  player() |  not_a_player.
 logout_player(Hash) -> gen_server:call(?MODULE,{logout_player, Hash}).
+
+-spec delete_player(Nick::string()) ->  ok |  not_a_player.
 delete_player(Nick) -> gen_server:call(?MODULE,{delete_player, Nick}).
+
+-spec show(player) ->  [player()] | [].
 show(player) ->  gen_server:call(?MODULE,{show, player}).
+
+-spec update_schema() ->  ok.
 update_schema() -> gen_server:call(?MODULE,{update_schema}).
 
 %% internal Start --
@@ -75,11 +98,13 @@ do(Q) ->
 
 %% creates a salted sha256 hash with a salt strung from the security section of
 %% yags.config
+-spec getHash(Nick::string(),Password::string()) ->  string().
 getHash(Nick,Password)->
 	Salt =yags_config:get_value(config,[security,salt], <<"soooosecure">>),
 	hmac:hexlify(hmac:hmac256(Salt,list_to_binary(Nick ++ Password))).
 
 %% find single player from database
+-spec findPlayer(atom(),Hash::string()) -> player() |  not_a_player.
 findPlayer(hash,Hash)->
 	case do(qlc:q([X || X <- mnesia:table(player), 
 							X#player.hash == Hash]))  of
@@ -102,6 +127,7 @@ findPlayer(mail,Mail)->
 	end.
 
 %% Update a player by given row
+-spec writePlayer(player()) -> player().
 writePlayer(Row)->
 	F = fun() ->
 			mnesia:write(Row)
@@ -109,6 +135,7 @@ writePlayer(Row)->
 	mnesia:transaction(F),
 	findPlayer(hash,Row#player.hash).
 
+-spec createPlayer(Nick::string(),Mail::string(),Password::string(),Registered::non_neg_integer()) -> player().
 createPlayer(Nick,Mail,Password,Registered) ->
 	Hash=getHash(Nick,Password),
 	Row = #player{hash=Hash, 
@@ -123,6 +150,7 @@ createPlayer(Nick,Mail,Password,Registered) ->
 	writePlayer(Row).
 
 %% wrapper to login a player. Sets isOnline=1 and timestamp for lastlogin
+-spec loginPlayer(Hash::string(),LoginTS::non_neg_integer()) -> player() |  not_a_player.
 loginPlayer(Hash,LoginTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
@@ -130,6 +158,7 @@ loginPlayer(Hash,LoginTS)->
 	end.
 
 %% wrapper to logout a player. Sets isOnline=0 and timestamp for lastlogout
+-spec logoutPlayer(Hash::string(),LogoutTS::non_neg_integer()) -> player() |  not_a_player.
 logoutPlayer(Hash,LogoutTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
