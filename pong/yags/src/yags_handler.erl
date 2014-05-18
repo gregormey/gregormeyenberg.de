@@ -12,7 +12,7 @@ init({tcp, http}, _Req, _Opts) ->
 
 websocket_init(_TransportName, Req, _Opts) ->
     %%set timeout to 5 min  
-    {ok, Req, undefined_state}. 
+    {ok, Req, undefined_state,300000}. 
 
 %%client calls
 websocket_handle({text, Msg}, Req, State) ->
