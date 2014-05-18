@@ -103,7 +103,7 @@ var Player={
                                 },
                                 next
                               );
-                            res.redirect("/play");
+                            res.redirect("/opponents");
                           }else{
                             Player.renderErr(res,req,TextCatalog.loginFail,"","login"); 
                           }
@@ -157,7 +157,7 @@ var Player={
      */
     index:function(req, res){
       if(req.session.myPlayer){
-        res.redirect('/play');
+        res.redirect('/opponents');
       }else{
         res.redirect('/login');
       }
@@ -185,6 +185,23 @@ var Player={
       res.render('register', {
         title: 'Create Pong Account'
       });
+    },
+
+    /**
+     * 
+     * @param  {[type]} req [description]
+     * @param  {[type]} res [description]
+     * @return {[type]}     [description]
+     */
+    opponents:function(req,res){
+      if(req.session.myPlayer){
+        res.render('opponents', {
+          title: 'Currently Online'
+        });
+      }else{
+        res.redirect('/login');
+      }
+
     }
 
 }
@@ -197,4 +214,4 @@ exports.startGame = Player.startGame;
 exports.index=Player.index;
 exports.login_form=Player.login_form;
 exports.registration_form=Player.registration_form;
-
+exports.opponents=Player.opponents;

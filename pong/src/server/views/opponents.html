@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block externalJS %}
+<script src="/socket.io/socket.io.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Player online:</h1>
+<table>
+	<tr>
+		<th>Nick</th>
+		<th>Score</th>
+		<th></th>
+	</tr>
+<table>
+{% endblock %}

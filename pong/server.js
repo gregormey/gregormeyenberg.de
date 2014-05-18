@@ -44,6 +44,7 @@ app.post('/register', player.add);
 app.post('/login', player.login);
 app.get('/logout', player.logout);
 app.get('/play', player.startGame);
+app.get('/opponents', player.opponents);
 
 
 /**
