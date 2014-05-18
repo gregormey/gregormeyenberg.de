@@ -15,7 +15,8 @@ start(_StartType, _StartArgs) ->
 			{"/websocket", yags_handler, []}
 		]}
 	]),
-	{ok, _} = cowboy:start_http(http, 100, [{port, 10010}],
+	Port =yags_config:get_value(config,[websocket,port], 10010),
+	{ok, _} = cowboy:start_http(http, 100, [{port, Port}],
 		[{env, [{dispatch, Dispatch}]}]),
     yags_sup:start_link().
 
