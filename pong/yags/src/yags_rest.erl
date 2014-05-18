@@ -11,11 +11,15 @@
 
 -include("yags_database.hrl").
 
+-type player_json() :: [{<<_:32,_:_*8>>,'undefined' | binary() | non_neg_integer()},...].
+-type player() :: #player {}.
+
 init(_Route, _Req, State) ->
     {ok, State}.
 
 %%internal
 %% converts player record to tuble that can be converted to json
+-spec formatPlayer(player()) -> player_json().
 formatPlayer(Player) ->
     [{<<"Hash">>,list_to_binary(Player#player.hash)},
     {<<"Nick">>,list_to_binary(Player#player.nick)},
