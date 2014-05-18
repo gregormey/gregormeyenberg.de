@@ -1,4 +1,4 @@
--module(yaws_handler).
+-module(yags_handler).
 -behaviour(cowboy_websocket_handler).
 
 -export([init/3]).
@@ -11,16 +11,17 @@ init({tcp, http}, _Req, _Opts) ->
     {upgrade, protocol, cowboy_websocket}.
 
 websocket_init(_TransportName, Req, _Opts) ->
-    erlang:start_timer(1000, self(), <<"Hello!">>),
-    {ok, Req, undefined_state}.
+    %%set timeout to 5 min  
+    {ok, Req, undefined_state}. 
 
+%%client calls
 websocket_handle({text, Msg}, Req, State) ->
     {reply, {text, << "That's what she said! ", Msg/binary >>}, Req, State};
 websocket_handle(_Data, Req, State) ->
     {ok, Req, State}.
 
+%% server calls
 websocket_info({timeout, _Ref, Msg}, Req, State) ->
-    erlang:start_timer(1000, self(), <<"How' you doin'?">>),
     {reply, {text, Msg}, Req, State};
 websocket_info(_Info, Req, State) ->
     {ok, Req, State}.
