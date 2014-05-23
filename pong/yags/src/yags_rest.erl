@@ -25,6 +25,11 @@ get("/players/", _Req, State) ->
     			Player <- yags_database:show(player)],
     {Status, {json, Players}, State};
 
+%% Get websocketport
+get("/wssocket/", _Req, State) ->
+    Port =yags_config:get_value(config,[websocket,port], 10010),
+    {200, {json, Port}, State};
+
 %%finds a single player either by hash or by Nick and password with the GET parameter 
 %%Example by Password /player/test?pwd=test  
 get("/player/:id", Req, State) ->
