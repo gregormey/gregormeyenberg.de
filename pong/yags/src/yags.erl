@@ -26,6 +26,7 @@ set_dbPath()->
 %starts all required OTP applications
 -spec start_applications() -> ok.
 start_applications() ->
+	application:start(gproc),
 	application:start(crypto),
 	application:start(ranch),
 	application:start(cowboy),

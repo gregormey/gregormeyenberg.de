@@ -11,31 +11,17 @@
 
 -include("yags_database.hrl").
 
--type player_json() :: [{<<_:32,_:_*8>>,'undefined' | binary() | non_neg_integer()},...].
--type player() :: #player {}.
 
 init(_Route, _Req, State) ->
     {ok, State}.
 
 %%internal
-%% converts player record to tuble that can be converted to json
--spec formatPlayer(player()) -> player_json().
-formatPlayer(Player) ->
-    [{<<"Hash">>,list_to_binary(Player#player.hash)},
-    {<<"Nick">>,list_to_binary(Player#player.nick)},
-    {<<"Mail">>,list_to_binary(Player#player.mail)},
-    {<<"Score">>,Player#player.score},
-    {<<"IsOnline">>,Player#player.isOnline},
-    {<<"Registered">>,Player#player.registered},
-    {<<"LastLogin">>,Player#player.lastLogin},
-    {<<"LastLogout">>,Player#player.lastLogout}
-    ].
 
 %% GET Methods
 %% Shows all stored players
 get("/players/", _Req, State) ->
     Status = 200,
-    Players= [formatPlayer(Player)|| 
+    Players= [yags_util:formatPlayer(Player)|| 
     			Player <- yags_database:show(player)],
     {Status, {json, Players}, State};
 
@@ -46,12 +32,12 @@ get("/player/:id", Req, State) ->
         undefined -> Hash=leptus_req:param(id, Req),
                      case yags_database:find_player(binary_to_list(Hash)) of
                         not_a_player -> {404, {json,[{<<"Msg">>,<<"Player not found">>}]},State};
-                        Player -> {200, {json, formatPlayer(Player)}, State}
+                        Player -> {200, {json, yags_util:formatPlayer(Player)}, State}
                     end;
         Password -> Nick=leptus_req:param(id, Req),
                     case yags_database:find_player(binary_to_list(Nick), binary_to_list(Password)) of
                         not_a_player -> {404, {json,[{<<"Msg">>,<<"Player not found">>}]},State};
-                        Player -> {200, {json, formatPlayer(Player)}, State}
+                        Player -> {200, {json, yags_util:formatPlayer(Player)}, State}
                     end
     end.
 
@@ -92,9 +78,9 @@ put("/player/:id", Req, State) ->
     Hash=leptus_req:param(id, Req),
     case leptus_req:body_qs(Req) of
         [{<<"Login">>,<<"1">>}] -> 
-            {200, {json, formatPlayer(yags_database:login_player(binary_to_list(Hash)))}, State};
+            {200, {json, yags_util:formatPlayer(yags_database:login_player(binary_to_list(Hash)))}, State};
         [{<<"Logout">>,<<"1">>}] ->
-            {200, {json, formatPlayer(yags_database:logout_player(binary_to_list(Hash)))}, State};
+            {200, {json, yags_util:formatPlayer(yags_database:logout_player(binary_to_list(Hash)))}, State};
          _ -> {406,{json, [{<<"Msg">>,<<"Parameter not matching">>}]}, State}
 end.
 

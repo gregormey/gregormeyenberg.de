@@ -4,8 +4,14 @@
 -export([unixTS/0]).
 -export([validate/2]).
 -export([validate/3]).
+-export([formatPlayer/1]).
+-export([jsonPlayers/1]).
+
+-include("yags_database.hrl").
 
 -type validation_result() :: valid | nick_not_valid | password_not_valid | mail_not_valid.
+-type player_json() :: [{<<_:32,_:_*8>>,'undefined' | binary() | non_neg_integer()},...].
+-type player() :: #player {}.
 
 %% generates a POSIX timestamp
 -spec unixTS()-> non_neg_integer().
@@ -42,3 +48,25 @@ validate(Nick,Password, Mail) ->
 		{_,not_valid,_} -> password_not_valid;
 		{_,_,not_valid} -> mail_not_valid
 	end.
+
+%% converts player record to tuble that can be converted to json
+-spec formatPlayer(player()) -> player_json().
+formatPlayer(Player) ->
+    [{<<"Hash">>,list_to_binary(Player#player.hash)},
+    {<<"Nick">>,list_to_binary(Player#player.nick)},
+    {<<"Mail">>,list_to_binary(Player#player.mail)},
+    {<<"Score">>,Player#player.score},
+    {<<"IsOnline">>,Player#player.isOnline},
+    {<<"Registered">>,Player#player.registered},
+    {<<"LastLogin">>,Player#player.lastLogin},
+    {<<"LastLogout">>,Player#player.lastLogout}
+    ].
+
+%% converts a list of players to json binary
+-spec jsonPlayers([player()]) -> binary().
+jsonPlayers(Players) ->
+	FormatedPlayers=[ formatPlayer(Player) || Player <- Players],
+	jsx:encode(FormatedPlayers). 
+
+
+

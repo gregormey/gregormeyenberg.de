@@ -30,6 +30,7 @@
 -include_lib("stdlib/include/qlc.hrl").
 -include("yags_database.hrl").
 
+
 -type not_valid() :: mail_exists | nick_exists | password_not_valid | mail_not_valid.
 -type player() :: #player {}.
 
@@ -83,8 +84,10 @@ logout_player(Hash) -> gen_server:call(?MODULE,{logout_player, Hash}).
 -spec delete_player(Nick::string()) ->  ok |  not_a_player.
 delete_player(Nick) -> gen_server:call(?MODULE,{delete_player, Nick}).
 
--spec show(player) ->  [player()] | [].
-show(player) ->  gen_server:call(?MODULE,{show, player}).
+-spec show(player | player_online) ->  [player()] | [].
+show(player) ->  gen_server:call(?MODULE,{show, player});
+
+show(player_online) ->  gen_server:call(?MODULE,{show, player_online}).
 
 -spec update_schema() ->  ok.
 update_schema() -> gen_server:call(?MODULE,{update_schema}).
@@ -126,6 +129,14 @@ findPlayer(mail,Mail)->
 		[Player] -> Player
 	end.
 
+%% find players from database by several conditions
+-spec findPlayers(all|online) -> [player()] |  [].
+findPlayers(all)->
+	do(qlc:q([X || X <- mnesia:table(player)]));
+findPlayers(online)->
+	do(qlc:q([X || X <- mnesia:table(player),
+											X#player.isOnline == 1])).
+
 %% Update a player by given row
 -spec writePlayer(player()) -> player().
 writePlayer(Row)->
@@ -154,7 +165,11 @@ createPlayer(Nick,Mail,Password,Registered) ->
 loginPlayer(Hash,LoginTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
-		Player -> writePlayer(Player#player{isOnline=1,lastLogin=LoginTS})
+		Player -> 
+				UpdatedPlayer = writePlayer(Player#player{isOnline=1,lastLogin=LoginTS}),
+				%% send broadcast to all clients for online player
+				gproc:send({p, l, wsbroadcast}, {self(), wsbroadcast, findPlayers(online)}),
+				UpdatedPlayer
 	end.
 
 %% wrapper to logout a player. Sets isOnline=0 and timestamp for lastlogout
@@ -162,7 +177,11 @@ loginPlayer(Hash,LoginTS)->
 logoutPlayer(Hash,LogoutTS)->
 	case findPlayer(hash,Hash) of
 		not_a_player -> not_a_player;
-		Player -> writePlayer(Player#player{isOnline=0,lastLogout=LogoutTS})
+		Player -> 
+				UpdatedPlayer = writePlayer(Player#player{isOnline=0,lastLogout=LogoutTS}),
+				%% send broadcast to all clients for online player
+				gproc:send({p, l, wsbroadcast}, {self(), wsbroadcast, findPlayers(online)}),
+				UpdatedPlayer
 	end.
 
 
@@ -214,7 +233,11 @@ handle_call({delete_player,Nick},_From, Tab) ->
 	end;
 %% list all players
 handle_call({show, player}, _From, Tab) ->
-	Reply =do(qlc:q([X || X <- mnesia:table(player)])),
+	Reply =findPlayers(all),
+	{reply, Reply, Tab};
+
+handle_call({show, player_online}, _From, Tab) ->
+	Reply =findPlayers(online),
 	{reply, Reply, Tab};
 
 %% call to update database schema. loads update FUN from yags.update

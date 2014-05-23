@@ -12,7 +12,7 @@
 start(_StartType, _StartArgs) ->
 	 Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/websocket", yags_handler, []}
+			{"/websocket", yags_websocket, []}
 		]}
 	]),
 	Port =yags_config:get_value(config,[websocket,port], 10010),
