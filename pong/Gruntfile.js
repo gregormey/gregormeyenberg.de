@@ -9,7 +9,7 @@ module.exports = function(grunt) {
          options: {
           reporter: 'spec'
         },
-        src: ['tests/client/testBall.js','tests/client/testPlayer.js','tests/server/testPlayer.js']
+        src: ['tests/client/testBall.js','tests/client/testPlayer.js']
       }
     },
     uglify: {
@@ -22,6 +22,7 @@ module.exports = function(grunt) {
                                         'src/client/class/Ball.js',
                                         'src/client/class/ComputerPlayer.js',
                                         'src/client/class/HumanPlayer.js',
+                                        'src/client/class/YagsClient.js',
                                         'src/client/plugin.js']
         }
       }

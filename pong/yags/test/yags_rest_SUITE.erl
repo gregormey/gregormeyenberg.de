@@ -14,6 +14,7 @@
 -export([player_login/1]).
 -export([player_logout/1]).
 -export([player_delete/1]).
+-export([ws_port/1]).
 
 
 %% helpers
@@ -33,7 +34,8 @@ all() ->
      player_find,
      player_login,
      player_logout,
-     player_delete
+     player_delete,
+     ws_port
     ].
 
 player_new(_) ->
@@ -87,6 +89,11 @@ player_delete(_) ->
     {404, _, C1} = request(M2, "/player/test100?pwd=test100"),
       <<"{\"Msg\":\"Player not found\"}">> = response_body(C1).
 
+ws_port()->
+     M = <<"GET">>,
+    {200, _, C1} = request(M, "/wsport"),
+    101000=jsx:decode(response_body(C1)),
+
 
 %% internals
 get_player_hash()->
@@ -95,6 +102,8 @@ get_player_hash()->
     Player=jsx:decode(response_body(C1)),
     [{<<"Hash">>,Hash},{<<"Nick">>,<<"test100">>},_,_,_,_,_,_]=Player,
     binary_to_list(Hash).
+
+
 
 
 

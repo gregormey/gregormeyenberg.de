@@ -26,7 +26,7 @@ get("/players/", _Req, State) ->
     {Status, {json, Players}, State};
 
 %% Get websocketport
-get("/wssocket/", _Req, State) ->
+get("/wsport/", _Req, State) ->
     Port =yags_config:get_value(config,[websocket,port], 10010),
     {200, {json, Port}, State};
 

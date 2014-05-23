@@ -195,9 +195,14 @@ var Player={
      */
     opponents:function(req,res){
       if(req.session.myPlayer){
-        res.render('opponents', {
-          title: 'Currently Online'
-        });
+          Yags.get("/wsport",
+                function(yags,port){
+                    res.render('opponents', {
+                      title: 'Currently Online',
+                      wsPort:port
+                    });
+                }
+            );
       }else{
         res.redirect('/login');
       }
