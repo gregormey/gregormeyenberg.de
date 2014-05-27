@@ -1,8 +1,9 @@
 {% extends 'layout.html' %}
 {% block externalJS %}
 <script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/swig/swig.min.js"></script>
+<script type="text/javascript" src="/js/swig.min.js"></script>
 <script type="text/javascript" src="/js/pong.min.js"></script>
+<script type="text/javascript" src="/views/opponentsList.js"></script>
 {% endblock %}
 
 {% block inlineJS %}
@@ -15,10 +16,14 @@ yags=new YagsClient({{ wsPort }});
 <h1>Player online:</h1>
 <div ><a href="/logout">logout</a></div>
 <table>
-	<tr>
-		<th>Nick</th>
-		<th>Score</th>
-		<th></th>
-	</tr>
+	<thead>
+		<tr>
+			<th>Nick</th>
+			<th>Score</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
 <table>
 {% endblock %}

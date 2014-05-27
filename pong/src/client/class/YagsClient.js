@@ -12,9 +12,16 @@ var YagsClient = function(Port){
 	}
 	wsHost = "ws://localhost:"+Port+"/websocket";
     websocket = new WebSocket(wsHost);
-    websocket.onopen = function(evt) { alert('connected'); }; 
-    websocket.onclose = function(evt) { alert('disconected'); }; 
-    websocket.onmessage = function(evt) { alert(evt.data); }; 
+
+    websocket.onopen = function(evt) { }; 
+    websocket.onclose = function(evt) { location.href="/logout"}; 
+    websocket.onmessage = function(evt) { 
+    					
+							players=JSON.parse(evt.data);
+							var output = opponentsList()({players:players});
+							$('tbody').html(output);
+
+    					}; 
     websocket.onerror = function(evt) { }; 
 	
 };
