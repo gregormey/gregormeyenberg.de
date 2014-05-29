@@ -24,8 +24,10 @@ websocket_handle(_Data, Req, State) ->
     {ok, Req, State}.
 
 %% server calls
-websocket_info({_PID,wsbroadcast,Msg}, Req, State) ->
-    {reply, {text, yags_util:jsonPlayers(Msg)}, Req, State, hibernate};
+websocket_info({_PID,wsbroadcast,Players}, Req, State) ->
+    FormatedPlayers=[ yags_util:formatPlayer(Player) || Player <- Players],
+    Msg = [{<<"event">>,<<"opponentsListChange">>},{<<"data">>,FormatedPlayers}],
+    {reply, {text, jsx:encode(Msg)}, Req, State, hibernate};
 websocket_info(_Info, Req, State) ->
     {ok, Req, State}.
 

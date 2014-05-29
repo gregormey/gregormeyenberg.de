@@ -10,18 +10,61 @@ var YagsClient = function(Port){
 		alert('Websockets are not supported');
 		return;
 	}
-	wsHost = "ws://localhost:"+Port+"/websocket";
-    websocket = new WebSocket(wsHost);
 
-    websocket.onopen = function(evt) { }; 
-    websocket.onclose = function(evt) { location.href="/logout"}; 
-    websocket.onmessage = function(evt) { 
-    					
-							players=JSON.parse(evt.data);
-							var output = opponentsList.render({players:players});
-							$('tbody').html(output);
 
-    					}; 
-    websocket.onerror = function(evt) { }; 
+	// -- EVENTS
+    this.opponentsListChange = function(players){
+    	var output = opponentsList.render({players:players});
+		$('tbody').html(output);	
+    }
+
+	/**
+	 * Websocket url
+	 * @type {String}
+	 */
+	var wsHost = "ws://localhost:"+Port+"/websocket";
+    
+
+	/**
+	 * Websoccket connection
+	 * @type {WebSocket}
+	 */
+    this.websocket = new WebSocket(wsHost);
+
+    /**
+     * Websocekt call back
+     * @param  {[type]} evt [description]
+     * @return {[type]}     [description]
+     */
+    this.websocket.onopen = function(evt) { }; 
+
+    /**
+     * Websocekt call back
+     * @param  {[type]} evt [description]
+     * @return {[type]}     [description]
+     */
+    this.websocket.onclose = function(evt) { location.href="/logout"}; 
+
+    /**
+     * Websocket call back
+     * @param  {[type]} evt [description]
+     * @return {[type]}     [description]
+     */
+    this.websocket.onmessage =  $.proxy(function(evt) {  
+            var msg=JSON.parse(evt.data);
+            if(!this[msg.event]){
+                throw "Event "+msg.event+" not supported";
+            }
+            this[msg.event](msg.data);
+        },this);
+
+    /**
+     * Websocekt call back
+     * @param  {[type]} evt [description]
+     * @return {[type]}     [description]
+     */
+    this.websocket.onerror = function(evt) { };
+
+    
 	
 };
