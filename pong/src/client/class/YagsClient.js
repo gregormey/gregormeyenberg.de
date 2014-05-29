@@ -4,7 +4,7 @@
  * basically via websocket
  * @param {Number} Port WebSocket port
  */
-var YagsClient = function(Port){
+var YagsClient = function(Port,UserHash){
 	//No chance to play without websockets
 	if(!("WebSocket" in window)){  
 		alert('Websockets are not supported');
@@ -14,6 +14,15 @@ var YagsClient = function(Port){
 
 	// -- EVENTS
     this.opponentsListChange = function(players){
+        //remove Player
+        players=$.map(players,function(player,i){
+            
+            if(player.Hash == UserHash){
+                return null
+            }else{
+                return player;
+            }
+        });
     	var output = opponentsList.render({players:players});
 		$('tbody').html(output);	
     }

@@ -199,7 +199,8 @@ var Player={
                 function(yags,port){
                     res.render('opponents', {
                       title: 'Currently Online',
-                      wsPort:port
+                      wsPort:port,
+                      userHash:req.session.myPlayer.Hash
                     });
                 }
             );
