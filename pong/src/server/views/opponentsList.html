@@ -1,7 +1,12 @@
-{% for player in players %}	
-	<tr>
-		<td>{{ player.Nick }}</td>
-		<td>{{ player.Score }}</td>
-		<td><input type="button" value='Challenge'></td>
-	</tr>
-{% for x in obj %}
+{% extends 'clientSideWrapper.js.tpl' %}
+{% block template %}
+	{% raw %}
+		"{% for player in players %}"+	
+			"<tr>"+ 
+				"<td>{{ player.Nick }}</td>"+
+				"<td>{{ player.Score }}</td>"+
+				"<td><input type='button' value='Challenge'></td>"+
+			"</tr>"+
+		"{% endfor  %}"
+	{% endraw %}
+{% endblock %}

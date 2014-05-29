@@ -18,7 +18,7 @@ var YagsClient = function(Port){
     websocket.onmessage = function(evt) { 
     					
 							players=JSON.parse(evt.data);
-							var output = opponentsList()({players:players});
+							var output = opponentsList.render({players:players});
 							$('tbody').html(output);
 
     					}; 

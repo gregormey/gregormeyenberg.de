@@ -7,6 +7,7 @@ var express = require('express')
   , app = express();
 
 var player = require('./src/server/routes/player');
+var views = require('./src/server/routes/views');
 
 
 //enable cookie session
@@ -16,6 +17,7 @@ app.use(express.cookieSession());
 
 // assign the swig engine to .html files
 app.engine('html', swig.renderFile);
+
 
 // set .html as the default extension 
 app.set('view engine', 'html');
@@ -45,6 +47,7 @@ app.post('/login', player.login);
 app.get('/logout', player.logout);
 app.get('/play', player.startGame);
 app.get('/opponents', player.opponents);
+app.get('/views/:template', views.template);
 
 
 /**
