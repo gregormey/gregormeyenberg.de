@@ -5,7 +5,7 @@
 			"<tr>"+ 
 				"<td>{{ player.Nick }}</td>"+
 				"<td>{{ player.Score }}</td>"+
-				"<td><input type='button' value='Challenge'></td>"+
+				"<td><a href='/play?player={{ userHash }}&opponent={{ player.Hash }}'>Challange</a></td>"+
 			"</tr>"+
 		"{% endfor  %}"
 	{% endraw %}

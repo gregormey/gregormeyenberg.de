@@ -112,13 +112,13 @@ var Player={
     },
 
     /**
-      * Route callback to logout a Player. 
-      * Removes player Object from Session.
-     * @param  {Object}   req  Request Object
-     * @param  {Object}   res  Response Object
-     * @param  {Function} next Callback to throw exception
-     * @return {null}        
-     */
+    * Route callback to logout a Player. 
+    * Removes player Object from Session.
+    * @param  {Object}   req  Request Object
+    * @param  {Object}   res  Response Object
+    * @param  {Function} next Callback to throw exception
+    * @return {null}        
+    */
     logout:function(req, res, next){
       callback=function(){
         delete req.session.myPlayer;

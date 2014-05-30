@@ -23,7 +23,7 @@ var YagsClient = function(Port,UserHash){
                 return player;
             }
         });
-    	var output = opponentsList.render({players:players});
+    	var output = opponentsList.render({players:players,userHash:UserHash});
 		$('tbody').html(output);	
     }
 
@@ -31,7 +31,7 @@ var YagsClient = function(Port,UserHash){
 	 * Websocket url
 	 * @type {String}
 	 */
-	var wsHost = "ws://localhost:"+Port+"/websocket";
+	var wsHost = "ws://192.168.2.103:"+Port+"/websocket";
     
 
 	/**
