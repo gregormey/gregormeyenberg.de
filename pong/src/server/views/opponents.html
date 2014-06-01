@@ -8,7 +8,7 @@
 
 {% block inlineJS %}
 
-yags=new YagsClient({{ wsPort }}, '{{ userHash }}');
+YagsClient.init({{ wsPort }}, '{{ userHash }}');
 
 {% endblock %}
 

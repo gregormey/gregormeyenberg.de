@@ -140,10 +140,29 @@ var Player={
      */
     startGame:function(req, res, next){
         if(req.session.myPlayer){
-           res.render("playground", {
-              title: TextCatalog.playgroundTitle,
-              PlayerNick:req.session.myPlayer.Nick
-           });
+          if(req.query.opponent){
+            // find opponent
+            Yags.get("/player/"+req.query.opponent,
+              function(yags,player){
+                if(player.Hash){
+                  var start = req.query.start?"true":"false";
+                  res.render("playground", {
+                          title: TextCatalog.playgroundTitle,
+                          wsPort:req.session.myPlayer.wsport,
+                          PlayerNick:req.session.myPlayer.Nick,
+                          OpponentNick: player.Nick,
+                          UserHash:req.session.myPlayer.Hash,
+                          OpponentHash: player.Hash,
+                          start: start
+                    });
+                }else{
+                  res.redirect("/opponents");
+                }
+              }
+            );
+          }else{
+            res.redirect("/opponents");
+          }
         }else{
           res.redirect("/login");
         }
@@ -195,15 +214,24 @@ var Player={
      */
     opponents:function(req,res){
       if(req.session.myPlayer){
-          Yags.get("/wsport",
-                function(yags,port){
-                    res.render('opponents', {
+          var render=function(){
+            res.render('opponents', {
                       title: 'Currently Online',
-                      wsPort:port,
+                      wsPort:req.session.myPlayer.wsport,
                       userHash:req.session.myPlayer.Hash
-                    });
-                }
-            );
+            });
+          };
+          if(Player.wsport==null){
+              Yags.get("/wsport",
+                    function(yags,port){
+                        //set web socket port
+                        req.session.myPlayer.wsport=port;
+                        render();
+                    }
+                );
+          }else{
+            render();
+          }
       }else{
         res.redirect('/login');
       }

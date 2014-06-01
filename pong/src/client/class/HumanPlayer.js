@@ -2,13 +2,21 @@
  * Player extention for human controlled player
  * @param {CanvasRenderingContext2D} ctx
  * @param {Number} side (PLAYER_LEFT|PLAYER_RIGHT)
+ * @param {String} opponent Opponent Hash
  */
-var HumanPlayer=function(ctx,side){
+var HumanPlayer=function(ctx,side,opponent){
 	/**
 	 * Referenze identification in canvas (ctx) scope
 	 * @type {String}
 	 */
 	this.ctxReference="player";
+
+	/**
+	 * Opponent Hash
+	 * @type {String}
+	 */
+	this.opponent=opponent;
+
 	
 	/**
 	 * speed increment
@@ -27,6 +35,9 @@ var HumanPlayer=function(ctx,side){
 					this.move(PLAYER_MOVEUP);
 				}else if(event.keyCode==40){ // down
 					this.move(PLAYER_MOVEDOWN);
+				}
+				if(YagsClient){
+					YagsClient.sendObjectsToRemote(this.direct);
 				}
 			},this)
 		);

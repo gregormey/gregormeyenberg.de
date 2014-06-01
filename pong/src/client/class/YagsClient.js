@@ -4,76 +4,167 @@
  * basically via websocket
  * @param {Number} Port WebSocket port
  */
-var YagsClient = function(Port,UserHash){
-	//No chance to play without websockets
-	if(!("WebSocket" in window)){  
-		alert('Websockets are not supported');
-		return;
-	}
+var YagsClient = {
+	/**
+     * Websoccket connection
+     * @type {WebSocket}
+     */
+    websocket:null,
+
+    /**
+     * Opponent Hash
+     * @type {string}
+     */
+    opponent:null,
+
+    /**
+     * User Hash
+     * @type {string}
+     */
+    user:null,
+
+    init:function(Port,UserHash,OpponentHash,start){
+            //The cool kids use websockets
+        if(!("WebSocket" in window)){  
+            alert('Websockets are not supported');
+            return;
+        };
+
+        /**
+        * Opponent Hash
+        * @type {string}
+        */
+        this.opponent=OpponentHash;
+
+        /**
+        * User Hash
+        * @type {string}
+        */
+        this.user=UserHash;
+
+        /**
+         * Websocket url
+         * @type {String}
+         */
+        var wsHost = "ws://192.168.2.103:"+Port+"/websocket";
+
+        /**
+         * Websoccket connection
+         * @type {WebSocket}
+         */
+        this.websocket = new WebSocket(wsHost);
+
+        /**
+         * Websocekt call back
+         * @param  {[type]} evt [description]
+         * @return {[type]}     [description]
+         */
+        this.websocket.onopen = function(evt) {
+                /**
+                * register socket connection with Player Hash
+                */
+                console.log('register HASH:'+YagsClient.user);
+                YagsClient.websocket.send(JSON.stringify({
+                        RegisterHash: YagsClient.user
+                }));
+
+                if(!start){
+                    YagsClient.sendStartGame();
+                }
+        }; 
+
+        /**
+         * Websocekt call back
+         * @param  {[type]} evt [description]
+         * @return {[type]}     [description]
+         */
+        this.websocket.onclose = function(evt) { location.href="/logout"}; 
+
+        /**
+         * Websocket call back
+         * @param  {[type]} evt [description]
+         * @return {[type]}     [description]
+         */
+        this.websocket.onmessage =  function(evt) {  
+                var msg=JSON.parse(evt.data);
+                if(!YagsClient[msg.event]){
+                    throw "Event "+msg.event+" not supported";
+                }
+                YagsClient[msg.event](msg.data);
+            };
+
+        /**
+         * Websocekt call back
+         * @param  {[type]} evt [description]
+         * @return {[type]}     [description]
+         */
+        this.websocket.onerror = function(evt) { };
+
+       
+    },
 
 
-	// -- EVENTS
-    this.opponentsListChange = function(players){
+	// -- REMOTE EVENTS
+    opponentsListChange:function(players){
         //remove Player
         players=$.map(players,function(player,i){
             
-            if(player.Hash == UserHash){
-                return null
+            if(player.Hash == YagsClient.user){
+                return null;
             }else{
                 return player;
             }
         });
-    	var output = opponentsList.render({players:players,userHash:UserHash});
+    	var output = opponentsList.render({players:players,userHash:YagsClient.user});
 		$('tbody').html(output);	
-    }
-
-	/**
-	 * Websocket url
-	 * @type {String}
-	 */
-	var wsHost = "ws://192.168.2.103:"+Port+"/websocket";
-    
-
-	/**
-	 * Websoccket connection
-	 * @type {WebSocket}
-	 */
-    this.websocket = new WebSocket(wsHost);
+    },
 
     /**
-     * Websocekt call back
-     * @param  {[type]} evt [description]
-     * @return {[type]}     [description]
+     * called when remote sends objects
+     * @param  {Object} data [description]
+     * @return {[type]}      [description]
      */
-    this.websocket.onopen = function(evt) { }; 
+    requestRemoteObjects:function(data){
+        console.log(data);
+        $.fn.pong.ctx.opponent.setRemoteData(data);
+    },
 
     /**
-     * Websocekt call back
-     * @param  {[type]} evt [description]
-     * @return {[type]}     [description]
+     * called when remote starts game
+     * @param  {Object} data [description]
+     * @return {[type]}      [description]
      */
-    this.websocket.onclose = function(evt) { location.href="/logout"}; 
+    startGame:function(opponent){
+        location.href="/play?start=true&opponent="+opponent;
+    },
+
+    // -- LOCAL EVENTS
 
     /**
-     * Websocket call back
-     * @param  {[type]} evt [description]
-     * @return {[type]}     [description]
+     * sends local objects to remote
+     * @return {[type]} [description]
      */
-    this.websocket.onmessage =  $.proxy(function(evt) {  
-            var msg=JSON.parse(evt.data);
-            if(!this[msg.event]){
-                throw "Event "+msg.event+" not supported";
-            }
-            this[msg.event](msg.data);
-        },this);
+    sendObjectsToRemote : function(data){
+        console.log(data);
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){    
+            this.websocket.send(JSON.stringify({
+                To: YagsClient.opponent,
+                Data: data
+            }));
+        }
+    },
 
-    /**
-     * Websocekt call back
-     * @param  {[type]} evt [description]
-     * @return {[type]}     [description]
-     */
-    this.websocket.onerror = function(evt) { };
-
-    
+    sendStartGame:function(){
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){  
+            console.log("Start Game with:"+YagsClient.opponent);  
+            this.websocket.send(JSON.stringify({
+                To: YagsClient.opponent,
+                Data: {
+                    event:"startGame",
+                    data:YagsClient.user
+                }
+            }));
+        }
+    },
 	
 };

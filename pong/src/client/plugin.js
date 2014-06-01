@@ -55,16 +55,35 @@
 				 * @type {Ball}
 				 */
 				ctx.ball=new Ball(ctx);
-				/**
-				 * Player entity
-				 * @type {HumanPlayer}
-				 */
-				ctx.player=new HumanPlayer(ctx,PLAYER_LEFT);
-				/**
-				 * Opponent Entity
-				 * @type {ComputerPlayer}
-				 */
-				ctx.opponent=new ComputerPlayer(ctx,PLAYER_RIGHT);
+				
+				//if opponent is set
+				if(YagsClient){
+
+					/**
+					 * Player entity
+					 * @type {HumanPlayer}
+					 */
+					ctx.player=new HumanPlayer(ctx,PLAYER_LEFT,YagsClient.opponent);
+
+					/**
+					 * Opponent Entity
+					 * @type {RemotePlayer}
+					 */
+					ctx.opponent=new RemotePlayer(ctx,PLAYER_RIGHT);
+
+				}else{
+					/**
+					 * Player entity
+					 * @type {HumanPlayer}
+					 */
+					ctx.player=new HumanPlayer(ctx,PLAYER_LEFT);
+					/**
+					 * Opponent Entity
+					 * @type {ComputerPlayer}
+					 */
+					ctx.opponent=new ComputerPlayer(ctx,PLAYER_RIGHT);
+				}
+				
 				
 				//register game objects to be drawn
 				objects.push(ctx.ball);

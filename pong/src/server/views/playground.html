@@ -5,10 +5,14 @@
 {% endblock %}
 
 {% block inlineJS %}
+	var settings={};
+	{% if OpponentHash %}
+		YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ OpponentHash }}',{{ start }});
+	{% endif %}
 
-$(document).ready(
+	$(document).ready(
 		function(){
-			$('#pong').pong();
+			$('#pong').pong(settings);
 	});
 
 {% endblock %}

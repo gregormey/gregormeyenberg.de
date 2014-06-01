@@ -22,6 +22,7 @@ module.exports = function(grunt) {
                                         'src/client/class/Ball.js',
                                         'src/client/class/ComputerPlayer.js',
                                         'src/client/class/HumanPlayer.js',
+                                        'src/client/class/RemotePlayer.js',
                                         'src/client/class/YagsClient.js',
                                         'src/client/plugin.js']
         }
