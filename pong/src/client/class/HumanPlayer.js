@@ -45,6 +45,9 @@ var HumanPlayer=function(ctx,side,opponent){
 		$(document).keyup(
 			$.proxy(function(){
 				this.stop();
+				if(YagsClient){
+					YagsClient.sendObjectsToRemote(this.direct);
+				}
 			},this)	
 		);
 	};

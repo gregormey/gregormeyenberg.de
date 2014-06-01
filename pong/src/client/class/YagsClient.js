@@ -107,16 +107,18 @@ var YagsClient = {
 	// -- REMOTE EVENTS
     opponentsListChange:function(players){
         //remove Player
-        players=$.map(players,function(player,i){
-            
-            if(player.Hash == YagsClient.user){
-                return null;
-            }else{
-                return player;
-            }
-        });
-    	var output = opponentsList.render({players:players,userHash:YagsClient.user});
-		$('tbody').html(output);	
+        if(opponentsList){
+            players=$.map(players,function(player,i){
+                
+                if(player.Hash == YagsClient.user){
+                    return null;
+                }else{
+                    return player;
+                }
+            });
+        	var output = opponentsList.render({players:players,userHash:YagsClient.user});
+    		$('tbody').html(output);
+        }	
     },
 
     /**
@@ -125,8 +127,12 @@ var YagsClient = {
      * @return {[type]}      [description]
      */
     requestRemoteObjects:function(data){
-        console.log(data);
-        $.fn.pong.ctx.opponent.setRemoteData(data);
+        console.log("get:"+data);
+        $.fn.pong.ctx.forEach(
+                function(ctx){
+                    ctx.opponent.setRemoteData(data);
+                }
+            );
     },
 
     /**
@@ -145,11 +151,14 @@ var YagsClient = {
      * @return {[type]} [description]
      */
     sendObjectsToRemote : function(data){
-        console.log(data);
+        console.log("send:"+data);
         if(this.opponent && this.websocket.readyState == this.websocket.OPEN){    
             this.websocket.send(JSON.stringify({
                 To: YagsClient.opponent,
-                Data: data
+                Data: {
+                    event:"requestRemoteObjects",
+                    data:data,
+                }
             }));
         }
     },

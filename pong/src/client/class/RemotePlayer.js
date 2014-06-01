@@ -20,8 +20,14 @@ var RemotePlayer=function(ctx,side){
 	  * @param  {[type]} data [description]
 	  * @return {[type]}      [description]
 	  */
-	 this.setRemoteData=function(data){
-	 	this.move(data);
+	 this.setRemoteData=function(direct){
+	 	if(direct==0){
+	 		this.stop();
+	 	}else if(direct==1){
+	 		this.move(PLAYER_MOVEDOWN);
+	 	}else if(direct==-1){
+	 		this.move(PLAYER_MOVEUP);
+	 	}
 	 }
 	
 	Player.call(this, ctx,side);
