@@ -9,8 +9,10 @@
 		settings = $.extend({}, $.fn.pong.defaults, settings);
 		//collection for objects to draw
 		var objects=[];
+		var gameLoop=false;
 
 		var loop=function(){
+
 			//clean playground(s)
 			$.fn.pong.ctx.forEach(
 				function(ctx){
@@ -28,9 +30,12 @@
 			);
 		};
 
+		
+		
+
 		//start rendering interval
 		window.setInterval(loop,1000/settings.fps);
-	
+
 		return this.each(
 			function()
 			{
@@ -57,8 +62,9 @@
 				ctx.ball=new Ball(ctx);
 				
 				//if opponent is set
-				if(YagsClient){
+				//
 
+				if(YagsClient.opponent!=null){
 					/**
 					 * Player entity
 					 * @type {HumanPlayer}
@@ -72,6 +78,7 @@
 					ctx.opponent=new RemotePlayer(ctx,PLAYER_RIGHT);
 
 				}else{
+		
 					/**
 					 * Player entity
 					 * @type {HumanPlayer}

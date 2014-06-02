@@ -161,7 +161,12 @@ var Player={
               }
             );
           }else{
-            res.redirect("/opponents");
+             res.render("playground", {
+                          title: TextCatalog.playgroundTitle,
+                          PlayerNick:req.session.myPlayer.Nick,
+                          OpponentNick: "Computer",
+                          UserHash:req.session.myPlayer.Hash
+                    });
           }
         }else{
           res.redirect("/login");

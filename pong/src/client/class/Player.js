@@ -175,7 +175,6 @@ var Player = function(ctx,side){
 		}else if(direction==PLAYER_MOVEDOWN){
 				this.direct=1;
 		}
-		console.log("player direct:"+this.direct);
 	};
 
 	/**

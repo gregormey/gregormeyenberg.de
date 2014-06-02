@@ -1,6 +1,11 @@
 {% extends 'clientSideWrapper.js.tpl' %}
 {% block template %}
 	{% raw %}
+		"<tr>"+ 
+			"<td>Computer</td>"+
+				"<td>-</td>"+
+				"<td><a href='/play'>Challange</a></td>"+
+		"</tr>"+
 		"{% for player in players %}"+	
 			"<tr>"+ 
 				"<td>{{ player.Nick }}</td>"+
