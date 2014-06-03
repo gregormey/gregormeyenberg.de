@@ -153,7 +153,7 @@ var Player={
                           OpponentNick: player.Nick,
                           UserHash:req.session.myPlayer.Hash,
                           OpponentHash: player.Hash,
-                          start: start
+                          remoteEvent: start?"sendStartGame":null
                     });
                 }else{
                   res.redirect("/opponents");
@@ -212,6 +212,61 @@ var Player={
     },
 
     /**
+     * renders the challanged dialog
+     * @param  {[type]} req Request Object
+     * @param  {[type]} res Response Object
+     * @return {[type]}     [description]
+     */
+    challange:function(req, res){
+      if(req.query.opponent){
+            // find opponent
+            Yags.get("/player/"+req.query.opponent,
+              function(yags,player){
+                if(player.Hash){
+                     res.render('challanged', {
+                      title: 'You are challanged',
+                      OpponentNick: player.Nick,
+                      OpponentHash: player.Hash
+                    });
+                }else{
+                  res.redirect('/opponents');
+                }
+              }
+            );  
+      }else{
+        res.redirect('/opponents');
+      }
+     
+    },
+
+    /**
+     * renders the wait dialog
+     * @param  {[type]} req Request Object
+     * @param  {[type]} res Response Object
+     * @return {[type]}     [description]
+     */
+    wait:function(req, res){
+       if(req.query.opponent){
+            // find opponent
+            Yags.get("/player/"+req.query.opponent,
+              function(yags,player){
+                if(player.Hash){
+                     res.render('wait', {
+                      title: 'Wait for opponent',
+                      OpponentNick: player.Nick,
+                      OpponentHash: player.Hash
+                    });
+                }else{
+                  res.redirect('/opponents');
+                }
+              }
+            );  
+      }else{
+        res.redirect('/opponents');
+      }
+    },
+
+    /**
      * 
      * @param  {[type]} req [description]
      * @param  {[type]} res [description]
@@ -254,3 +309,6 @@ exports.index=Player.index;
 exports.login_form=Player.login_form;
 exports.registration_form=Player.registration_form;
 exports.opponents=Player.opponents;
+exports.challange=Player.challange;
+exports.wait=Player.wait;
+

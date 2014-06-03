@@ -23,7 +23,7 @@ var YagsClient = {
      */
     user:null,
 
-    init:function(Port,UserHash,OpponentHash,start){
+    init:function(Port,UserHash,OpponentHash,callbackEvent){
             //The cool kids use websockets
         if(!("WebSocket" in window)){  
             alert('Websockets are not supported');
@@ -68,8 +68,9 @@ var YagsClient = {
                         RegisterHash: YagsClient.user
                 }));
 
-                if(!start){
-                    YagsClient.sendStartGame();
+                //send init command to remote
+                if(remoteEvent){
+                    YagsClient[remoteEvent]();
                 }
         }; 
 
@@ -141,8 +142,26 @@ var YagsClient = {
      * @return {[type]}      [description]
      */
     startGame:function(opponent){
-        location.href="/play?start=true&opponent="+opponent;
+        location.href="/play?opponent="+opponent;
     },
+
+    /**
+     * called when remote refuses a game
+     * @param  {Object} data [description]
+     * @return {[type]}      [description]
+     */
+    refuseGame:function(opponent){
+        location.href="/opponent?refused="+opponent;
+    }
+
+    /**
+     * called when challange by a remote
+     * @param  {Object} data [description]
+     * @return {[type]}      [description]
+     */
+    challangePlayer:function(opponent){
+        location.href="/challange?opponent="+opponent;
+    }
 
     // -- LOCAL EVENTS
 
@@ -175,5 +194,34 @@ var YagsClient = {
             }));
         }
     },
+
+     sendRefuseGame:function(){
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){  
+            console.log("Refuse Game with:"+YagsClient.opponent);  
+            this.websocket.send(JSON.stringify({
+                To: YagsClient.opponent,
+                Data: {
+                    event:"refuseGame",
+                    data:YagsClient.user
+                }
+            }));
+        }
+    },
+
+
+     sendChallangePlayer:function(){
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){  
+            console.log("Challange Player:"+YagsClient.opponent);  
+            this.websocket.send(JSON.stringify({
+                To: YagsClient.opponent,
+                Data: {
+                    event:"challangePlayer",
+                    data:YagsClient.user
+                }
+            }));
+        }
+    },
+
+
 	
 };

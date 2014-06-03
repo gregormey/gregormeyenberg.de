@@ -7,7 +7,7 @@
 {% block inlineJS %}
 	var settings={};
 	{% if OpponentHash %}
-		YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ OpponentHash }}',{{ start }});
+		YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ OpponentHash }}','{{ remoteEvent }}');
 	{% endif %}
 
 	$(document).ready(

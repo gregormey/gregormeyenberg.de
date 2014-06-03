@@ -47,6 +47,8 @@ app.post('/login', player.login);
 app.get('/logout', player.logout);
 app.get('/play', player.startGame);
 app.get('/opponents', player.opponents);
+app.get('/challange', player.challange);
+app.get('/wait', player.wait);
 app.get('/views/:template', views.template);
 
 
