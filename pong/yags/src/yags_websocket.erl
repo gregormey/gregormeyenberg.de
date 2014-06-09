@@ -62,7 +62,7 @@ registerHash(UserHash) ->
 -spec sendObjectsToRemote(binary(),binary()) -> true.
 sendObjectsToRemote(To,Data) ->
     erlang:display("Send Data To:"++binary_to_list(To)),
-    {PID, Data}=gproc:send({p, l, To}, {self(), Data}),
+    {_PID, Data}=gproc:send({p, l, To}, {self(), Data}),
     true.
     
 

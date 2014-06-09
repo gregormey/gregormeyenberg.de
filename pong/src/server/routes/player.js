@@ -145,7 +145,6 @@ var Player={
             Yags.get("/player/"+req.query.opponent,
               function(yags,player){
                 if(player.Hash){
-                  var start = req.query.start?"true":"false";
                   res.render("playground", {
                           title: TextCatalog.playgroundTitle,
                           wsPort:req.session.myPlayer.wsport,
@@ -153,7 +152,7 @@ var Player={
                           OpponentNick: player.Nick,
                           UserHash:req.session.myPlayer.Hash,
                           OpponentHash: player.Hash,
-                          remoteEvent: start?"sendStartGame":null
+                          remoteEvent: req.query.start?"sendStartGame":null
                     });
                 }else{
                   res.redirect("/opponents");
@@ -254,7 +253,11 @@ var Player={
                      res.render('wait', {
                       title: 'Wait for opponent',
                       OpponentNick: player.Nick,
-                      OpponentHash: player.Hash
+                      OpponentHash: player.Hash,
+                      UserHash: req.session.myPlayer.Hash,
+                      //@@TODO: get ws port cached service
+                      wsPort:req.session.myPlayer.wsport,
+                      remoteEvent: 'sendChallangePlayer'
                     });
                 }else{
                   res.redirect('/opponents');
@@ -275,13 +278,35 @@ var Player={
     opponents:function(req,res){
       if(req.session.myPlayer){
           var render=function(){
-            res.render('opponents', {
+            var renderOptions=  {
                       title: 'Currently Online',
                       wsPort:req.session.myPlayer.wsport,
-                      userHash:req.session.myPlayer.Hash
-            });
+                      UserHash:req.session.myPlayer.Hash
+            };
+
+            //add refuse opponent call
+            if(req.query.refuse){
+              renderOptions.RefuseHash=req.query.refuse;
+              renderOptions.remoteEvent='sendRefuseGame';
+            }
+
+            //render refused nick name
+            if(req.query.refused){
+                  Yags.get("/player/"+req.query.refused,
+                      function(yags,player){
+                        if(player.Hash){
+                            renderOptions.RefusedNick=player.Nick;
+                            res.render('opponents',renderOptions);
+                        }else{
+                          res.render('opponents',renderOptions);
+                        }
+                      }
+                  )
+            }else{
+                res.render('opponents',renderOptions);
+            }
           };
-          if(Player.wsport==null){
+          if(!req.session.myPlayer.wsport){
               Yags.get("/wsport",
                     function(yags,port){
                         //set web socket port

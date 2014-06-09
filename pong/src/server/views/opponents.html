@@ -8,11 +8,24 @@
 
 {% block inlineJS %}
 
-YagsClient.init({{ wsPort }}, '{{ userHash }}');
+{% if RefuseHash %}
+
+	YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ RefuseHash }}','{{ remoteEvent }}');
+
+{% else %}
+
+	YagsClient.init({{ wsPort }}, '{{ UserHash }}');
+
+{% endif %}
 
 {% endblock %}
 
 {% block content %}
+
+{% if RefusedNick %}
+<p> Your challange was refused by {{ RefusedNick }}</p>
+{% endif %}
+
 <h1>Player online:</h1>
 <div ><a href="/logout">logout</a></div>
 <table>

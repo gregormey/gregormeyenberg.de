@@ -23,7 +23,15 @@ var YagsClient = {
      */
     user:null,
 
-    init:function(Port,UserHash,OpponentHash,callbackEvent){
+    /**
+     * inits client ws connection to yags
+     * @param  {[type]} Port         [description]
+     * @param  {[type]} UserHash     [description]
+     * @param  {[type]} OpponentHash [description]
+     * @param  {[type]} remoteEvent  [description]
+     * @return {[type]}              [description]
+     */
+    init:function(Port,UserHash,OpponentHash,remoteEvent){
             //The cool kids use websockets
         if(!("WebSocket" in window)){  
             alert('Websockets are not supported');
@@ -46,7 +54,7 @@ var YagsClient = {
          * Websocket url
          * @type {String}
          */
-        var wsHost = "ws://192.168.2.103:"+Port+"/websocket";
+        var wsHost = "ws://localhost:"+Port+"/websocket";
 
         /**
          * Websoccket connection
@@ -151,8 +159,8 @@ var YagsClient = {
      * @return {[type]}      [description]
      */
     refuseGame:function(opponent){
-        location.href="/opponent?refused="+opponent;
-    }
+        location.href="/opponents?refused="+opponent;
+    },
 
     /**
      * called when challange by a remote
@@ -161,7 +169,7 @@ var YagsClient = {
      */
     challangePlayer:function(opponent){
         location.href="/challange?opponent="+opponent;
-    }
+    },
 
     // -- LOCAL EVENTS
 
@@ -220,7 +228,7 @@ var YagsClient = {
                 }
             }));
         }
-    },
+    }
 
 
 	

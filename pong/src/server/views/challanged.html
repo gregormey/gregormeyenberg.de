@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1>You are challanged By:</h1>
+<h1>You are challanged by:</h1>
 <p>{{ OpponentNick }}</p>
-<a href="/play?opponent={{ OpponentHash }&start=true">ACCEPT</a>
+<a href="/play?opponent={{ OpponentHash }}&start=true">ACCEPT</a>
 <a href="/opponents?refuse={{ OpponentHash }}">REFUSE</a>
 {% endblock %}
