@@ -69,13 +69,13 @@
 					 * Player entity
 					 * @type {HumanPlayer}
 					 */
-					ctx.player=new HumanPlayer(ctx,PLAYER_LEFT,YagsClient.opponent);
+					ctx.player=new HumanPlayer(ctx,settings.player_side,YagsClient.opponent);
 
 					/**
 					 * Opponent Entity
 					 * @type {RemotePlayer}
 					 */
-					ctx.opponent=new RemotePlayer(ctx,PLAYER_RIGHT);
+					ctx.opponent=new RemotePlayer(ctx,settings.opponent_side);
 
 				}else{
 		

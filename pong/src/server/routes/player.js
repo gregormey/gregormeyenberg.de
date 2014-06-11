@@ -152,7 +152,9 @@ var Player={
                           OpponentNick: player.Nick,
                           UserHash:req.session.myPlayer.Hash,
                           OpponentHash: player.Hash,
-                          remoteEvent: req.query.start?"sendStartGame":null
+                          remoteEvent: req.query.start?"sendStartGame":null,
+                          player_side: req.query.start?"PLAYER_RIGHT":"PLAYER_LEFT",
+                          opponent_side: req.query.start?"PLAYER_LEFT":"PLAYER_RIGHT"
                     });
                 }else{
                   res.redirect("/opponents");

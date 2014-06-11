@@ -8,6 +8,8 @@
 	var settings={};
 	{% if OpponentHash %}
 		YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ OpponentHash }}','{{ remoteEvent }}');
+		settings['player_side']={{ player_side }};
+		settings['opponent_side']={{ opponent_side }};
 	{% endif %}
 
 	$(document).ready(
