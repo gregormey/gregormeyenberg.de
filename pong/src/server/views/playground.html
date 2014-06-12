@@ -34,6 +34,11 @@
 			<div id='opponentScore'>0</div>
 		</div>
 	</div>
+	{% if OpponentHash %}
+		<div style='clear:both;'><a href="/opponents?refuse={{ OpponentHash }}">quit</a></div>
+	{% else %}
+		<div style='clear:both;'><a href="/opponents">quit</a></div>
+	{% endif %}
 	<div style='clear:both;'><a href="/logout">logout</a></div>
 </div>
 {% endblock %}
