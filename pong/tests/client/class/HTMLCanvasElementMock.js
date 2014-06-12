@@ -40,6 +40,12 @@
            * @type {Object}
            */
           player:{
+            hasBall: false,
+            side: PLAYER_LEFT,
+            x:5,
+            y:15,
+            width:10,
+            height:40,
             addScore:function(){
               this.score=true;
             }
@@ -50,6 +56,12 @@
            * @type {Object}
            */
           opponent:{
+            hasBall: true,
+            side: PLAYER_RIGHT,
+            width:10,
+            height:40,
+            y:15,
+            x:385,
             addScore:function(){
               this.score=true;
             }

@@ -55,11 +55,7 @@
 				 */
 				ctx.fillStyle = $me.css("color");
 				ctx.strokeStyle=  $me.css("color");
-				/**
-				 * Ball entity
-				 * @type {Ball}
-				 */
-				ctx.ball=new Ball(ctx);
+				
 				
 				//if opponent is set
 				//
@@ -91,6 +87,11 @@
 					ctx.opponent=new ComputerPlayer(ctx,PLAYER_RIGHT);
 				}
 				
+				/**
+				 * Ball entity
+				 * @type {Ball}
+				 */
+				ctx.ball=new Ball(ctx);
 				
 				//register game objects to be drawn
 				objects.push(ctx.ball);

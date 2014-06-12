@@ -37,20 +37,30 @@ var Ball=function(ctx){
 
 	/**
 	 * sets ball back to middle point after score
-	 * @param  {Number} side [description]
 	 * @return {Null}      [description]
 	 */
 	this.reset=function(side){
-		this.x=ctx.width/2;
-		this.y=ctx.height/2;
-		//set the direction related to the side parameter
-		this.incX=side==PLAYER_RIGHT?-2:2;
-		this.incY=0;
+		var hasBall=null;
+		if(this.ctx.opponent.hasBall){
+			this.x=this.ctx.opponent.x+this.ctx.opponent.width;
+			this.y=this.ctx.opponent.y+(this.ctx.opponent.height/2);
+			hasBall=this.ctx.opponent;
+		}else if(this.ctx.player.hasBall){
+			this.x=this.ctx.player.x+this.ctx.player.width;
+			this.y=this.ctx.player.y+(this.ctx.player.height/2);
+			hasBall=this.ctx.player;
+		}
+		
+		if(hasBall!=null){
+			//set the direction related to the side parameter
+			this.incX=hasBall.side==PLAYER_RIGHT?-2:2;
+			this.incY=0;
+		}
 
 	}
 
 	//initial ball palce
-	this.reset(PLAYER_RIGHT);
+	this.reset();
 
 
 	/**
@@ -60,11 +70,23 @@ var Ball=function(ctx){
 	 * @return {Null}
 	 */
 	this.draw=function(){
+
+		if(this.ctx.opponent.hasBall){ //move ball with player if game is not started
+    		this.y=this.ctx.opponent.y+(this.ctx.opponent.height/2);
+    	}else if(this.ctx.player.hasBall){
+    		this.y=this.ctx.player.y+(this.ctx.player.height/2);
+    	}
+
 		this.ctx.beginPath();
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);// Outer circle
         this.ctx.fill();
         
-        this.move();
+        //only move if game is started
+        if(!this.ctx.opponent.hasBall &&
+        	!this.ctx.player.hasBall){
+        	this.move();
+    	}
+
 
 	};
 

@@ -3,7 +3,8 @@ var Ball=require("../../src/client/class/Ball.js");
 var HTMLCanvasElement=require("./class/HTMLCanvasElementMock.js");
 var Window = require("./class/WindowMock.js");
 var jQuery=require("./class/jQueryMock.js");
-PLAYER_RIGHT=1
+PLAYER_RIGHT=1;
+PLAYER_LEFT=0;
 describe('Ball', function(){
 	// Mock window variable globally
 	 window = new Window();
@@ -73,11 +74,11 @@ describe('Ball', function(){
       describe('#reset()',
           function(){
             it("sets x,y and inc  to initial values to restart game after score", function(){
-                 ball.reset(PLAYER_RIGHT);
+                  ball.reset();
                   assert.equal(ball.incX,-2);
                   assert.equal(ball.incY,0);
-                  assert.equal(ball.x,200);
-                  assert.equal(ball.y,150);
+                  assert.equal(ball.x,395);
+                  assert.equal(ball.y,35);
 
             });
           }

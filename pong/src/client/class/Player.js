@@ -89,15 +89,30 @@ var Player = function(ctx,side){
 		 * @type {Number}
 		 */
 		this.x=5;
+
+		/**
+		 * If player hasball game needs to be started by this player
+		 * @type {Boolean}
+		 */
+		this.hasBall= true;
 	}else if(this.side==PLAYER_RIGHT){
 		/**
 		 * place player on right side
 		 * @type {Number}
 		 */
 		this.x=this.ctx.width-(this.width+5);
+
+		/**
+		 * If player hasball game needs to be started by this player
+		 * right player always starts the game
+		 * @type {Boolean}
+		 */
+		this.hasBall= false;
+
 	}
 
 	
+
 
 	/**
 	 * increments score points and displays score

@@ -35,7 +35,10 @@ var HumanPlayer=function(ctx,side,opponent){
 					this.move(PLAYER_MOVEUP);
 				}else if(event.keyCode==40){ // down
 					this.move(PLAYER_MOVEDOWN);
+				}else if(event.keyCode==32){ //start game
+					this.hasBall=false
 				}
+
 				if(YagsClient){
 					YagsClient.sendObjectsToRemote(this.direct);
 				}
