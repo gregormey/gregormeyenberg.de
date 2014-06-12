@@ -92,6 +92,9 @@ var Ball=function(ctx){
 			this.x+=hasBall.width;
 		}
 
+		if(YagsClient){
+			YagsClient.sendReleaseBall();
+		}
 	}
 
 	/**
@@ -166,9 +169,17 @@ var Ball=function(ctx){
 	 */
 	this.checkScore=function(w){
 		if(this.x<0){
-			this.ctx.opponent.addScore();
+			if(this.ctx.opponent.side == PLAYER_RIGHT){
+				this.ctx.opponent.addScore();
+			}else{
+				this.ctx.player.addScore();
+			}
 		}else if(this.x>w){
-			this.ctx.player.addScore();
+			if(this.ctx.opponent.side == PLAYER_LEFT){
+				this.ctx.opponent.addScore();
+			}else{
+				this.ctx.player.addScore();
+			}
 		}
 	}
 

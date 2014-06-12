@@ -131,6 +131,20 @@ var YagsClient = {
     },
 
     /**
+     * releases the ball of the remote game
+     * @param  {Object} data 
+     * @return {Boolean}
+     */
+    releaseBall:function(data){
+        console.log("get release ball:"+data);
+        $.fn.pong.ctx.forEach(
+                function(ctx){
+                    ctx.ball.release();
+                }
+            );
+    },
+
+    /**
      * called when remote sends objects
      * @param  {Object} data [description]
      * @return {[type]}      [description]
@@ -225,6 +239,19 @@ var YagsClient = {
                 Data: {
                     event:"challangePlayer",
                     data:YagsClient.user
+                }
+            }));
+        }
+    },
+
+    sendReleaseBall:function(){
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){  
+            console.log("Release Ball for:"+YagsClient.opponent);  
+            this.websocket.send(JSON.stringify({
+                To: YagsClient.opponent,
+                Data: {
+                    event:"releaseBall",
+                    data:true
                 }
             }));
         }
