@@ -121,7 +121,8 @@ var Player = function(ctx,side){
 	this.addScore=function(){
 		this.score++;
 		$('#'+this.ctxReference+"Score").html(this.score);
-		this.ctx.ball.reset(this.side);
+		this.hasBall=true;
+		this.ctx.ball.reset();
 	}
 
 	/**

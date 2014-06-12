@@ -21,12 +21,23 @@ var ComputerPlayer=function(ctx,side){
 	this.moveUp=false;
 
 	/**
+	 * Interval to release the ball if computer has the ball
+	 * @type {Boolean}
+	 */
+	this.releaseBall=false;
+
+	/**
 	 * moves the player to the ball controlled by the middelpoint of player
 	 * and the ball coordinates, uses before draw hook method of player 
 	 * @return {Null}
 	 */
 	this.beforeDraw=function(){
 		var middle=this.y+(this.height/2);
+		var ball=this.ctx.ball;
+		if(this.hasBall){
+			window.setTimeout(function(){ball.release()},2000);
+		}
+
 		if(this.ctx.ball.y<middle){
 			
 			//only of if distance is greater then 5 px

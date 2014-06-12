@@ -77,7 +77,7 @@ describe('Ball', function(){
                   ball.reset();
                   assert.equal(ball.incX,-2);
                   assert.equal(ball.incY,0);
-                  assert.equal(ball.x,395);
+                  assert.equal(ball.x,385);
                   assert.equal(ball.y,35);
 
             });

@@ -36,7 +36,7 @@ var HumanPlayer=function(ctx,side,opponent){
 				}else if(event.keyCode==40){ // down
 					this.move(PLAYER_MOVEDOWN);
 				}else if(event.keyCode==32){ //start game
-					this.hasBall=false
+					this.ctx.ball.release();
 				}
 
 				if(YagsClient){

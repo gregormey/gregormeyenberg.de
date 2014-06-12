@@ -36,22 +36,38 @@ var Ball=function(ctx){
 	this.ctx=ctx;
 
 	/**
+	 * Returns the Player who has the ball or NULL
+	 * @return {Player|null} [description]
+	 */
+	this.getHasBall=function(){
+		var hasBall=null;
+		if(this.ctx.opponent.hasBall){
+			hasBall=this.ctx.opponent;
+		}else if(this.ctx.player.hasBall){
+			hasBall=this.ctx.player;
+		}
+		return hasBall;
+	}
+
+	/**
 	 * sets ball back to middle point after score
 	 * @return {Null}      [description]
 	 */
 	this.reset=function(side){
-		var hasBall=null;
-		if(this.ctx.opponent.hasBall){
-			this.x=this.ctx.opponent.x+this.ctx.opponent.width;
-			this.y=this.ctx.opponent.y+(this.ctx.opponent.height/2);
-			hasBall=this.ctx.opponent;
-		}else if(this.ctx.player.hasBall){
-			this.x=this.ctx.player.x+this.ctx.player.width;
-			this.y=this.ctx.player.y+(this.ctx.player.height/2);
-			hasBall=this.ctx.player;
-		}
+		var hasBall=this.getHasBall();
 		
 		if(hasBall!=null){
+			//set initial position of ball
+			if(hasBall.side==PLAYER_RIGHT){
+				this.incX=-2;
+				this.x=hasBall.x;
+			}else{
+				this.incX=2;
+				this.x=hasBall.x+this.ctx.opponent.width;
+			}
+			
+			this.y=hasBall.y+(this.ctx.opponent.height/2);
+
 			//set the direction related to the side parameter
 			this.incX=hasBall.side==PLAYER_RIGHT?-2:2;
 			this.incY=0;
@@ -62,6 +78,21 @@ var Ball=function(ctx){
 	//initial ball palce
 	this.reset();
 
+	/**
+	 * relases the ball to start the game
+	 * @return {null} 
+	 */
+	this.release=function(){
+		var hasBall=this.getHasBall();
+		hasBall.hasBall=false;
+		//move ball a bit to not trigger player hit
+		if(hasBall.side==PLAYER_RIGHT){
+			this.x-=hasBall.width;
+		}else{
+			this.x+=hasBall.width;
+		}
+
+	}
 
 	/**
 	 * Draws Ball at current position and triggers move interval
