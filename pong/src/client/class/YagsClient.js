@@ -54,7 +54,7 @@ var YagsClient = {
          * Websocket url
          * @type {String}
          */
-        var wsHost = "ws://localhost:"+Port+"/websocket";
+        var wsHost = "ws://192.168.178.43:"+Port+"/websocket";
 
         /**
          * Websoccket connection
