@@ -28,7 +28,7 @@ get("/players/", _Req, State) ->
 %% Get websocketport
 get("/wsinfo/", _Req, State) ->
     Port =yags_config:get_value(config,[websocket,port], 10010),
-    Host = yags_config:get_value(config,[websocket,host], <<"net.pong">>),
+    Host = yags_config:get_value(config,[websocket,host], <<"localhost">>),
     {200, {json, [{<<"Host">>,Host},{<<"Port">>,Port}]}, State};
 
 %%finds a single player either by hash or by Nick and password with the GET parameter 
