@@ -9,6 +9,7 @@ var express = require('express')
 var player = require('./src/server/routes/player');
 var views = require('./src/server/routes/views');
 
+var yags_server = null;
 
 //enable cookie session
 app.use(express.cookieParser('MAIKE'));
@@ -29,11 +30,30 @@ app.use(express.static(__dirname + '/public'));
 //use url encode for post requests
 app.use(express.urlencoded());
 
+
 //disable view cache for developnment enviroment
 if(process.argv[2]=='-dev'){
   app.set('view cache', false);
   swig.setDefaults({ cache: false });
 }
+
+//get YAGS connect data basically websocket server and port
+app.use(function(req, res, next) {
+ 	if(yags_server===null){
+		Yags.get("/wsinfo",
+            function(yags,server){
+                req.yags_server=yags_server={
+                					host:server.Host,
+                					wsport:server.Port
+                				};
+				next();
+            }
+        );
+ 	}else{
+ 		req.yags_server=yags_server;
+ 		next();
+ 	}
+});
 
 
 /**

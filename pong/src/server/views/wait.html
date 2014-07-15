@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block inlineJS %}
-		YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ OpponentHash }}','{{ remoteEvent }}');
+		YagsClient.init('{{ Host }}', {{ wsPort }}, '{{ UserHash }}', '{{ OpponentHash }}','{{ remoteEvent }}');
 {% endblock %}
 
 {% block content %}

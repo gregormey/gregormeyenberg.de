@@ -10,11 +10,11 @@
 
 {% if RefuseHash %}
 
-	YagsClient.init({{ wsPort }}, '{{ UserHash }}', '{{ RefuseHash }}','{{ remoteEvent }}');
+	YagsClient.init('{{ Host }}', {{ wsPort }}, '{{ UserHash }}', '{{ RefuseHash }}','{{ remoteEvent }}');
 
 {% else %}
 
-	YagsClient.init({{ wsPort }}, '{{ UserHash }}');
+	YagsClient.init('{{ Host }}', {{ wsPort }}, '{{ UserHash }}');
 
 {% endif %}
 

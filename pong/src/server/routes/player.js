@@ -143,15 +143,16 @@ var Player={
           if(req.query.opponent){
             // find opponent
             Yags.get("/player/"+req.query.opponent,
-              function(yags,player){
-                if(player.Hash){
+              function(yags,opponent){
+                if(opponent.Hash){
                   res.render("playground", {
                           title: TextCatalog.playgroundTitle,
-                          wsPort:req.session.myPlayer.wsport,
+                          Host:req.yags_server.host,
+                          wsPort:req.yags_server.wsport,
                           PlayerNick:req.session.myPlayer.Nick,
-                          OpponentNick: player.Nick,
+                          OpponentNick: opponent.Nick,
                           UserHash:req.session.myPlayer.Hash,
-                          OpponentHash: player.Hash,
+                          OpponentHash: opponent.Hash,
                           remoteEvent: req.query.start?"sendStartGame":null,
                           player_side: req.query.start?"PLAYER_RIGHT":"PLAYER_LEFT",
                           opponent_side: req.query.start?"PLAYER_LEFT":"PLAYER_RIGHT"
@@ -257,8 +258,8 @@ var Player={
                       OpponentNick: player.Nick,
                       OpponentHash: player.Hash,
                       UserHash: req.session.myPlayer.Hash,
-                      //@@TODO: get ws port cached service
-                      wsPort:req.session.myPlayer.wsport,
+                      Host:req.yags_server.host,
+                      wsPort:req.yags_server.wsport,
                       remoteEvent: 'sendChallangePlayer'
                     });
                 }else{
@@ -279,10 +280,10 @@ var Player={
      */
     opponents:function(req,res){
       if(req.session.myPlayer){
-          var render=function(){
             var renderOptions=  {
                       title: 'Currently Online',
-                      wsPort:req.session.myPlayer.wsport,
+                      Host:req.yags_server.host,
+                      wsPort:req.yags_server.wsport,
                       UserHash:req.session.myPlayer.Hash
             };
 
@@ -307,18 +308,7 @@ var Player={
             }else{
                 res.render('opponents',renderOptions);
             }
-          };
-          if(!req.session.myPlayer.wsport){
-              Yags.get("/wsport",
-                    function(yags,port){
-                        //set web socket port
-                        req.session.myPlayer.wsport=port;
-                        render();
-                    }
-                );
-          }else{
-            render();
-          }
+          
       }else{
         res.redirect('/login');
       }

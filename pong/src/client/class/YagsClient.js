@@ -31,7 +31,7 @@ var YagsClient = {
      * @param  {[type]} remoteEvent  [description]
      * @return {[type]}              [description]
      */
-    init:function(Port,UserHash,OpponentHash,remoteEvent){
+    init:function(Host,Port,UserHash,OpponentHash,remoteEvent){
             //The cool kids use websockets
         if(!("WebSocket" in window)){  
             alert('Websockets are not supported');
@@ -54,7 +54,7 @@ var YagsClient = {
          * Websocket url
          * @type {String}
          */
-        var wsHost = "ws://192.168.178.43:"+Port+"/websocket";
+        var wsHost = "ws://"+Host+":"+Port+"/websocket";
 
         /**
          * Websoccket connection
