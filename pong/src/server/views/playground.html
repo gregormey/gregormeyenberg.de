@@ -19,17 +19,21 @@
 
 {% endblock %}
 
+{% macro side_class(side) %}
+	{% if side=="PLAYER_RIGHT" %}right{% elseif side=="PLAYER_LEFT" %}left{% endif %}	
+{% endmacro %}
+
 {% block content %}
 <div class='wrapper'>
 	<h1>{{ title }} </h1>
 	<canvas id='pong' width="400" height="300">
 	</canvas>
 	<div id="score">
-		<div class='player'>
+		<div class='player {{ side_class(player_side) }}'>
 			<div>{{ PlayerNick }}</div>
 			<div id='playerScore'>0</div>
 		</div>
-		<div class='opponent'>
+		<div class='opponent {{ side_class(opponent_side) }}'>
 			<div>{{ OpponentNick }}</div>
 			<div id='opponentScore'>0</div>
 		</div>
