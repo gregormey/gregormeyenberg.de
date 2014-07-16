@@ -27,7 +27,12 @@ var Ball=function(ctx){
 	 */
 	this.radius=5;
 	
-	
+	/**
+	 * Object to store remote position
+	 * @type {Object}
+	 */
+	this.remotePosition=null;
+
 
 	/**
 	 * Rendering Context
@@ -111,6 +116,18 @@ var Ball=function(ctx){
     		this.y=this.ctx.player.y+(this.ctx.player.height/2);
     	}
 
+    	//handle remote position correction
+    	if(YagsClient){
+	    	if(YagsClient.isMaster){
+	    		//send position to remote if player Master
+	    		YagsClient.sendBallPosition({x:this.x,y:this.y});
+	    		
+	    	}else{//use remote position if player is not Master
+	    		this.x=this.remotePosition.x;
+	    		this.y=this.remotePosition.y;
+	    	}
+    	}
+
 		this.ctx.beginPath();
         this.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);// Outer circle
         this.ctx.fill();
@@ -124,6 +141,12 @@ var Ball=function(ctx){
 
 	};
 
+	/**
+	 * setter for remotePosition
+	 */
+	this.setRemotePosition=function(data){
+		this.remotePosition=data
+	}
 
 	/**
 	 * Checks if ball is on the edge's of the playground

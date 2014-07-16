@@ -24,6 +24,12 @@ var YagsClient = {
     user:null,
 
     /**
+     * if true send postionins of npc's to control poitions 
+     * @type {Boolean}
+     */
+    isMaster:false,
+
+    /**
      * inits client ws connection to yags
      * @param  {[type]} Port         [description]
      * @param  {[type]} UserHash     [description]
@@ -159,6 +165,20 @@ var YagsClient = {
     },
 
     /**
+     * alled when remote sends ball position
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    requestBallPosition:function(data){
+        console.log("get:"+data);
+        $.fn.pong.ctx.forEach(
+                function(ctx){
+                    ctx.ball.setRemotePosition(data);
+                }
+            );
+    }
+
+    /**
      * called when remote starts game
      * @param  {Object} data [description]
      * @return {[type]}      [description]
@@ -205,7 +225,11 @@ var YagsClient = {
     },
 
     sendStartGame:function(){
-        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){  
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){ 
+            
+            //player who starts the game is position master for npc
+            this.isMaster=true; 
+            
             console.log("Start Game with:"+YagsClient.opponent);  
             this.websocket.send(JSON.stringify({
                 To: YagsClient.opponent,
@@ -252,6 +276,19 @@ var YagsClient = {
                 Data: {
                     event:"releaseBall",
                     data:true
+                }
+            }));
+        }
+    },
+
+    sendBallPosition:function(data){
+        if(this.opponent && this.websocket.readyState == this.websocket.OPEN){  
+            console.log("Send Ball Position to:"+YagsClient.opponent);  
+            this.websocket.send(JSON.stringify({
+                To: YagsClient.opponent,
+                Data: {
+                    event:"requestBallPosition",
+                    data:data
                 }
             }));
         }
